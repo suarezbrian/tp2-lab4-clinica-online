@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "dist/tp-lab4-clinica-online/browser",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
