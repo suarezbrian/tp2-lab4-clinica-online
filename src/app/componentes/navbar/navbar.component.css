@@ -1,0 +1,12 @@
+.example-icon {
+    padding: 0 10px;
+  }
+  
+  .example-spacer {
+    
+    padding: 0 40%; 
+  }
+
+.btnHome{
+  cursor: pointer;
+}

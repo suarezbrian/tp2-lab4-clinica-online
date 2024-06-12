@@ -1,0 +1,11 @@
+<mat-toolbar  class="navbar">
+    <mat-toolbar-row>
+      <span class="btnHome" routerLink="/bienvenida"><mat-icon class="example-icon">favorite</mat-icon>Clínica Online</span>
+      <span class="example-spacer"></span>      
+      <button color="primary" mat-button [matMenuTriggerFor]="menu">Entrar al sistema</button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item><mat-icon class="example-icon">login</mat-icon>Entrar</button>
+        <button mat-menu-item routerLink="/registro"><mat-icon class="example-icon">person_add</mat-icon>Registarse</button>
+      </mat-menu>
+    </mat-toolbar-row>
+</mat-toolbar>

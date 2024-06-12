@@ -1,0 +1,263 @@
+<mat-tab-group [backgroundColor]="'primary'" dynamicHeight>
+    <mat-tab label="Pacientes">
+        <br>
+        <br>
+        <h3 style="text-align: center;">REGISTRO DE PACIENTES</h3>
+        <div class="example-large-box mat-elevation-z4">
+            <form [formGroup]="formPaciente" (ngSubmit)="registrarse('pac')">
+
+            
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput formControlName="nombre">
+                    <mat-error *ngIf="formPaciente.get('nombre')?.touched && (formPaciente.get('nombre')?.hasError('required') || formPaciente.get('nombre')?.hasError('pattern')) || formPaciente.get('nombre')?.hasError('maxlength')">
+                        <span *ngIf="formPaciente.get('nombre')?.hasError('required')">Nombre es requerido.</span>
+                        <span *ngIf="formPaciente.get('nombre')?.hasError('pattern')">Debe contener solo letras.</span>
+                        <span *ngIf="formPaciente.get('nombre')?.hasError('maxlength')">El nombre es muy largo, max: 15 caracteres.</span>
+                    </mat-error>
+                </mat-form-field>
+               
+              
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Apellido</mat-label>
+                    <input matInput formControlName="apellido">
+                    <mat-error *ngIf="formPaciente.get('apellido')?.touched && (formPaciente.get('apellido')?.hasError('required') || formPaciente.get('apellido')?.hasError('pattern')) ||  formPaciente.get('apellido')?.hasError('maxlength')">
+                        <span *ngIf="formPaciente.get('apellido')?.hasError('required')">Apellido es requerido.</span>
+                        <span *ngIf="formPaciente.get('apellido')?.hasError('pattern')">Debe contener solo letras.</span>
+                        <span *ngIf="formPaciente.get('apellido')?.hasError('maxlength')">El apellido es muy largo, max: 15 caracteres.</span>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Edad</mat-label>
+                    <input matInput formControlName="edad" type="number">
+                    <mat-error *ngIf="formPaciente.get('edad')?.touched && (formPaciente.get('edad')?.hasError('required') || formPaciente.get('edad')?.hasError('min'))">
+                        <span *ngIf="formPaciente.get('edad')?.hasError('required')"> Edad es requerido.</span>
+                        <span *ngIf="formPaciente.get('edad')?.hasError('min')">La Edad minima para el paciente debe ser de 1 año.</span>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>DNI</mat-label>
+                    <input matInput formControlName="dni">
+                    <mat-error *ngIf="formPaciente.get('dni')?.touched && (formPaciente.get('dni')?.hasError('required') || formPaciente.get('dni')?.hasError('minlength'))">
+                        <span *ngIf="formPaciente.get('dni')?.hasError('required')"> DNI es requerido.</span>
+                        <span *ngIf="formPaciente.get('dni')?.hasError('minlength')">Formato incorrecto. El DNI debe estar compuesto por 8 digitos.</span>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Obra Social</mat-label>
+                    <input matInput formControlName="obraSocial">
+                    <mat-error *ngIf="formPaciente.get('obraSocial')?.touched && (formPaciente.get('obraSocial')?.hasError('required') || formPaciente.get('obraSocial')?.hasError('maxlength')) || formPaciente.get('obraSocial')?.hasError('pattern')">
+                        <span *ngIf="formPaciente.get('obraSocial')?.hasError('required')"> Obra Social es requerida.</span>
+                        <span *ngIf="formPaciente.get('obraSocial')?.hasError('maxlength')">El nombre de la Obra Social es muy largo, max: 25 caracteres.</span>
+                        <span *ngIf="formPaciente.get('obraSocial')?.hasError('pattern')">Debe contener solo letras.</span>                     
+                    </mat-error>
+                </mat-form-field>
+
+            
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email" placeholder="mail@example.com">
+                    <mat-error *ngIf="formPaciente.get('email')?.touched && (formPaciente.get('email')?.hasError('required') || formPaciente.get('email')?.hasError('email'))">
+                        <span *ngIf="formPaciente.get('email')?.hasError('required')"> Email es requerido.</span>
+                        <span *ngIf="formPaciente.get('email')?.hasError('pattern')">Email no es válido.</span>
+                    </mat-error>
+                </mat-form-field>
+                  
+
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Contraseña</mat-label>
+                    <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+                    <button mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                      <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error *ngIf="formPaciente.get('password')?.touched && (formPaciente.get('password')?.hasError('required') || formPaciente.get('password')?.hasError('minlength'))">
+                        <span *ngIf="formPaciente.get('password')?.hasError('required')">  Contraseña es requerida.</span>
+                        <span *ngIf="formPaciente.get('password')?.hasError('minlength')">La contraseña es muy corta, min: 5 digitos.</span>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Imagen de Perfil 1</mat-label>
+                    <button mat-icon-button matPrefix (click)="f_input.click()">
+                      <mat-icon>attach_file</mat-icon>
+                    </button>
+                    <input type="text" readonly matInput [formControl]="imagenUno">
+                    <input
+                      type="file"
+                      hidden
+                      #f_input
+                      (change)="handleFileInputChange($event, 'imagenUno', 'pac')"
+                    />
+                    <mat-error *ngIf="formPaciente.get('imagenUno')?.hasError('required')">
+                      Imagen de Perfil 1 es requerida
+                    </mat-error>
+                </mat-form-field>
+                
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Imagen de Perfil 2</mat-label>
+                    <button mat-icon-button matPrefix (click)="f_input2.click()">
+                      <mat-icon>attach_file</mat-icon>
+                    </button>
+                    <input type="text" readonly matInput [formControl]="imagenDos">
+                    <input
+                      type="file"
+                      hidden
+                      #f_input2
+                      (change)="handleFileInputChange($event, 'imagenDos', 'pac')"
+                    />
+                    <mat-error *ngIf="formPaciente.get('imagenDos')?.hasError('required')">
+                      Imagen de Perfil 2 es requerida
+                    </mat-error>
+                </mat-form-field>
+
+                <br>
+                <br>
+                <button class="btnEnviar" mat-raised-button color="primary">Registrar Paciente</button>
+
+              </form>               
+
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <mat-checkbox class="autoCompletar" [color]="'warn'" [(ngModel)]="checked" (change)="onCheckboxChange($event)">
+            Auto completar los campos del registro
+        </mat-checkbox>
+
+    </mat-tab>
+    
+    <mat-tab label="Especialistas">
+        <br>
+        <br>
+        <h3 style="text-align: center;">REGISTRO DE ESPECIALISTAS</h3>
+      <div  class="example-large-box mat-elevation-z4">
+        <form [formGroup]="formEspecialista" (ngSubmit)="registrarse('espe')">
+
+            
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="nombre">
+                <mat-error *ngIf="formEspecialista.get('nombre')?.touched && (formEspecialista.get('nombre')?.hasError('required') || formEspecialista.get('nombre')?.hasError('pattern')) || formEspecialista.get('nombre')?.hasError('maxlength')">
+                    <span *ngIf="formEspecialista.get('nombre')?.hasError('required')">Nombre es requerido.</span>
+                    <span *ngIf="formEspecialista.get('nombre')?.hasError('pattern')">Debe contener solo letras.</span>
+                    <span *ngIf="formEspecialista.get('nombre')?.hasError('maxlength')">El nombre es muy largo, max: 15 caracteres.</span>
+                </mat-error>
+            </mat-form-field>
+           
+          
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Apellido</mat-label>
+                <input matInput formControlName="apellido">
+                <mat-error *ngIf="formEspecialista.get('apellido')?.touched && (formEspecialista.get('apellido')?.hasError('required') || formEspecialista.get('apellido')?.hasError('pattern')) ||  formEspecialista.get('apellido')?.hasError('maxlength')">
+                    <span *ngIf="formEspecialista.get('apellido')?.hasError('required')">Apellido es requerido.</span>
+                    <span *ngIf="formEspecialista.get('apellido')?.hasError('pattern')">Debe contener solo letras.</span>
+                    <span *ngIf="formEspecialista.get('apellido')?.hasError('maxlength')">El apellido es muy largo, max: 15 caracteres.</span>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Edad</mat-label>
+                <input matInput formControlName="edad" type="number">
+                <mat-error *ngIf="formEspecialista.get('edad')?.touched && (formEspecialista.get('edad')?.hasError('required') || formEspecialista.get('edad')?.hasError('min'))">
+                    <span *ngIf="formEspecialista.get('edad')?.hasError('required')"> Edad es requerido.</span>
+                    <span *ngIf="formEspecialista.get('edad')?.hasError('min')">La Edad minima para el paciente debe ser de 1 año.</span>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>DNI</mat-label>
+                <input matInput formControlName="dni">
+                <mat-error *ngIf="formEspecialista.get('dni')?.touched && (formEspecialista.get('dni')?.hasError('required') || formEspecialista.get('dni')?.hasError('minlength'))">
+                    <span *ngIf="formEspecialista.get('dni')?.hasError('required')"> DNI es requerido.</span>
+                    <span *ngIf="formEspecialista.get('dni')?.hasError('minlength')">Formato incorrecto. El DNI debe estar compuesto por 8 digitos.</span>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="!(formEspecialista.get('especialidad')?.value === 'otra'); else otraEspecialidadField" class="full-width">
+                <mat-label>Especialidad</mat-label>
+                <mat-select formControlName="especialidad" #especialidadSelect>
+                  <mat-option *ngFor="let item of especialidades" [value]="item.value">
+                    {{ item.viewValue }}
+                  </mat-option>
+                </mat-select>
+              
+                <mat-error *ngIf="formEspecialista.get('especialidad')?.touched && formEspecialista.get('especialidad')?.hasError('required')">
+                  <span>Especialidad es requerido.</span>
+                </mat-error>
+                              
+              </mat-form-field>
+              
+              
+              <ng-template #otraEspecialidadField>
+                <mat-form-field class="full-width">
+                  <mat-label>Otra Especialidad</mat-label>
+                  <input matInput formControlName="otraEspecialidad">
+                  <mat-error *ngIf="formEspecialista.get('otraEspecialidad')?.touched && (formEspecialista.get('otraEspecialidad')?.hasError('required') || formEspecialista.get('otraEspecialidad')?.hasError('pattern')) || formEspecialista.get('otraEspecialidad')?.hasError('maxlength')">
+                    <span *ngIf="formEspecialista.get('otraEspecialidad')?.hasError('required')">Especialidad es requerido.</span>
+                    <span *ngIf="formEspecialista.get('otraEspecialidad')?.hasError('maxlength')">El nombre de la especialidad no puede superar los 15 caracteres.</span>
+                    <span *ngIf="formEspecialista.get('otraEspecialidad')?.hasError('pattern')">Debe contener solo letras, sin espacios.</span>
+                  </mat-error>
+              
+                  <button mat-button (click)="volverASeleccion()">Volver a seleccionar especialidad</button>
+                  
+                </mat-form-field>
+              </ng-template>
+
+        
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" placeholder="mail@example.com">
+                <mat-error *ngIf="formEspecialista.get('email')?.touched && (formEspecialista.get('email')?.hasError('required') || formEspecialista.get('email')?.hasError('email'))">
+                    <span *ngIf="formEspecialista.get('email')?.hasError('required')"> Email es requerido.</span>
+                    <span *ngIf="formEspecialista.get('email')?.hasError('pattern')">Email no es válido.</span>
+                </mat-error>
+            </mat-form-field>
+              
+
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Contraseña</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+                <button mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="formEspecialista.get('password')?.touched && (formEspecialista.get('password')?.hasError('required') || formEspecialista.get('password')?.hasError('minlength'))">
+                    <span *ngIf="formEspecialista.get('password')?.hasError('required')">  Contraseña es requerida.</span>
+                    <span *ngIf="formEspecialista.get('password')?.hasError('minlength')">La contraseña es muy corta, min: 5 digitos.</span>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Imagen de Perfil 1</mat-label>
+                <button mat-icon-button matPrefix (click)="f_input3.click()">
+                  <mat-icon>attach_file</mat-icon>
+                </button>
+                <input type="text" readonly matInput [formControl]="imagenUno">
+                <input
+                  type="file"
+                  hidden
+                  #f_input3
+                  (change)="handleFileInputChange($event, 'imagenUno', 'espe')"
+                />
+                <mat-error *ngIf="formEspecialista.get('imagenUno')?.hasError('required')">
+                  Imagen de Perfil 1 es requerida
+                </mat-error>
+            </mat-form-field>
+
+            <br>
+            <br>
+            <button class="btnEnviar" mat-raised-button color="primary">Registrar Paciente</button>
+
+          </form>  
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <mat-checkbox class="autoCompletar" [color]="'warn'" [(ngModel)]="checked" (change)="onCheckboxChange($event)">
+          Auto completar los campos del registro
+      </mat-checkbox>
+    </mat-tab>
+    
+</mat-tab-group>
