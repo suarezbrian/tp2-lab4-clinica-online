@@ -88,58 +88,125 @@
     <strong *ngIf="esAdministrador && selectedUser">Se seleccionó un ADMINISTRADOR.</strong>
 
     <span *ngIf="!selectedUser">Seleccione una fila para empezar a editar.</span>
-    <form *ngIf="selectedUser" (ngSubmit)="actualizarDatos()" class="edit-form">
+    <form [formGroup]="formEdit" *ngIf="selectedUser" (ngSubmit)="actualizarDatos()" class="edit-form">
 
         <div class="form-row">
 
-            <mat-form-field class="form-field">
-                <mat-label>Nombre</mat-label>
-                <input matInput [(ngModel)]="selectedUser.nombre" name="nombre" required>
-            </mat-form-field>
+            <mat-form-field appearance="fill" class="form-field">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="nombre" [(ngModel)]="selectedUser.nombre" name="nombre">
+              <mat-error *ngIf="formEdit.get('nombre')?.touched && (formEdit.get('nombre')?.hasError('required') || formEdit.get('nombre')?.hasError('pattern')) || formEdit.get('nombre')?.hasError('maxlength')">
+                  <span *ngIf="formEdit.get('nombre')?.hasError('required')">Nombre es requerido.</span>
+                  <span *ngIf="formEdit.get('nombre')?.hasError('pattern')">Debe contener solo letras.</span>
+                  <span *ngIf="formEdit.get('nombre')?.hasError('maxlength')">El nombre es muy largo, max: 15 caracteres.</span>
+              </mat-error>
+          </mat-form-field>
 
-            <mat-form-field class="form-field">
-                <mat-label>Apellido</mat-label>
-                <input matInput [(ngModel)]="selectedUser.apellido" name="apellido" required>
-            </mat-form-field>
+          <mat-form-field appearance="fill" class="form-field">
+              <mat-label>Apellido</mat-label>
+              <input matInput formControlName="apellido" [(ngModel)]="selectedUser.apellido" name="apellido" >
+              <mat-error *ngIf="formEdit.get('apellido')?.touched && (formEdit.get('apellido')?.hasError('required') || formEdit.get('apellido')?.hasError('pattern')) || formEdit.get('apellido')?.hasError('maxlength')">
+                  <span *ngIf="formEdit.get('apellido')?.hasError('required')">Apellido es requerido.</span>
+                  <span *ngIf="formEdit.get('apellido')?.hasError('pattern')">Debe contener solo letras.</span>
+                  <span *ngIf="formEdit.get('apellido')?.hasError('maxlength')">El apellido es muy largo, max: 15 caracteres.</span>
+              </mat-error>
+          </mat-form-field>
 
-            <mat-form-field class="form-field">
-                <mat-label>Edad</mat-label>
-                <input matInput type="number" [(ngModel)]="selectedUser.edad" name="edad" required>
-            </mat-form-field>
+          <mat-form-field appearance="fill" class="form-field">
+              <mat-label>Edad</mat-label>
+              <input matInput type="number" formControlName="edad" [(ngModel)]="selectedUser.edad" name="edad">
+              <mat-error *ngIf="formEdit.get('edad')?.touched && (formEdit.get('edad')?.hasError('required') || formEdit.get('edad')?.hasError('min'))">
+                  <span *ngIf="formEdit.get('edad')?.hasError('required')"> Edad es requerido.</span>
+                  <span *ngIf="formEdit.get('edad')?.hasError('min')">La Edad minima para el paciente debe ser de 1 año.</span>
+              </mat-error>
+          </mat-form-field>
+            
         </div>
 
         <div class="form-row">
-            <mat-form-field class="form-field">
-                <mat-label>DNI</mat-label>
-                <input matInput type="text" [(ngModel)]="selectedUser.dni" name="dni" required>
+
+            <mat-form-field appearance="fill" class="form-field">
+              <mat-label>DNI</mat-label>
+              <input matInput formControlName="dni" [(ngModel)]="selectedUser.dni" name="dni">
+              <mat-error *ngIf="formEdit.get('dni')?.touched && (formEdit.get('dni')?.hasError('required') || formEdit.get('dni')?.hasError('minlength'))">
+                  <span *ngIf="formEdit.get('dni')?.hasError('required')"> DNI es requerido.</span>
+                  <span *ngIf="formEdit.get('dni')?.hasError('minlength')">Formato incorrecto. El DNI debe estar compuesto por 8 digitos.</span>
+              </mat-error>
             </mat-form-field>
 
-            <mat-form-field class="form-field">
-                <mat-label>Email</mat-label>
-                <input matInput type="email" [(ngModel)]="selectedUser.email" name="email" required>
-            </mat-form-field>
+            <mat-form-field appearance="fill" class="form-field">
+              <mat-label>Mail</mat-label>
+              <input matInput type="email" formControlName="email" [(ngModel)]="selectedUser.email" name="email">
+              <mat-error *ngIf="formEdit.get('email')?.touched && (formEdit.get('email')?.hasError('required') || formEdit.get('email')?.hasError('email'))">
+                  <span *ngIf="formEdit.get('email')?.hasError('required')"> Email es requerido.</span>
+                  <span *ngIf="formEdit.get('email')?.hasError('pattern')">Email no es válido.</span>
+              </mat-error>
+           </mat-form-field>
 
-            <mat-form-field class="form-field">
-                <mat-label>Password</mat-label>
-                <input matInput [(ngModel)]="selectedUser.password" name="password" required>
-            </mat-form-field>
+
+
+            <mat-form-field appearance="fill" class="form-field">
+              <mat-label>Password</mat-label>
+              <input matInput type="password" formControlName="password" [(ngModel)]="selectedUser.password" name="password">
+              <mat-error *ngIf="formEdit.get('password')?.touched && (formEdit.get('password')?.hasError('required') || formEdit.get('password')?.hasError('minlength'))">
+                  <span *ngIf="formEdit.get('password')?.hasError('required')">  Contraseña es requerida.</span>
+                  <span *ngIf="formEdit.get('password')?.hasError('minlength')">La contraseña es muy corta, min: 5 digitos.</span>
+              </mat-error>
+          </mat-form-field>
         </div>
 
         <div class="form-row">
-            <mat-form-field class="form-field" *ngIf="esEspecialista && !esAdministrador">
-                <mat-label>Especialidad</mat-label>
-                <input matInput [(ngModel)]="selectedUser.especialidad" name="especialidad">
-            </mat-form-field>
 
-            <mat-form-field class="form-field">
-                <mat-label>Rol</mat-label>
-                <input matInput [(ngModel)]="selectedUser.rol" name="rol">
+            <mat-form-field *ngIf="!(formEdit.get('especialidad')?.value === 'otra') && esEspecialista && !esAdministrador; else otraEspecialidadField" class="form-field">
+              <mat-label>Especialidad</mat-label>
+              <mat-select formControlName="especialidad" #especialidadSelect>
+                <mat-option *ngFor="let item of especialidades" [value]="item.value">
+                  {{ item.viewValue }}
+                </mat-option>
+              </mat-select>
+            
+              <mat-error *ngIf="formEdit.get('especialidad')?.touched && formEdit.get('especialidad')?.hasError('required')">
+                <span>Especialidad es requerido.</span>
+              </mat-error>
+                            
             </mat-form-field>
+            
+            
+            <ng-template #otraEspecialidadField>
+              <mat-form-field class="form-field" *ngIf="esEspecialista && !esAdministrador">
+                <mat-label>Otra Especialidad</mat-label>
+                <input matInput formControlName="otraEspecialidad">
+                <mat-error *ngIf="formEdit.get('otraEspecialidad')?.touched && (formEdit.get('otraEspecialidad')?.hasError('required') || formEdit.get('otraEspecialidad')?.hasError('pattern')) || formEdit.get('otraEspecialidad')?.hasError('maxlength')">
+                  <span *ngIf="formEdit.get('otraEspecialidad')?.hasError('required')">Especialidad es requerido.</span>
+                  <span *ngIf="formEdit.get('otraEspecialidad')?.hasError('maxlength')">El nombre de la especialidad no puede superar los 15 caracteres.</span>
+                  <span *ngIf="formEdit.get('otraEspecialidad')?.hasError('pattern')">Debe contener solo letras, sin espacios.</span>
+                </mat-error>
+            
+                <button mat-button (click)="volverASeleccion()">Volver a seleccionar especialidad</button>
+                
+              </mat-form-field>
+            </ng-template>
 
-            <mat-form-field class="form-field" *ngIf="!esEspecialista && !esAdministrador">
-                <mat-label>Obra Social</mat-label>
-                <input matInput [(ngModel)]="selectedUser.obraSocial" name="obraSocial">
-            </mat-form-field>
+            <mat-form-field appearance="fill" class="form-field">
+              <mat-label>Rol</mat-label>
+              <input matInput formControlName="rol"  [(ngModel)]="selectedUser.rol">
+              <mat-error *ngIf="formEdit.get('rol')?.touched && (formEdit.get('rol')?.hasError('required') || formEdit.get('rol')?.hasError('max')) || formEdit.get('rol')?.hasError('min')">
+                  <span *ngIf="formEdit.get('rol')?.hasError('required')"> El Rol es requerida.</span>
+                  <span *ngIf="formEdit.get('rol')?.hasError('min')">El valor minimo para el rol es 1.</span>
+                  <span *ngIf="formEdit.get('rol')?.hasError('max')">El valor maximo para el rol es 2.</span>
+              </mat-error>
+          </mat-form-field>
+
+            <mat-form-field appearance="fill" class="form-field" *ngIf="!esEspecialista && !esAdministrador">
+              <mat-label>Obra Social</mat-label>
+              <input matInput formControlName="obraSocial"  [(ngModel)]="selectedUser.obraSocial">
+              <mat-error *ngIf="formEdit.get('obraSocial')?.touched && (formEdit.get('obraSocial')?.hasError('required') || formEdit.get('obraSocial')?.hasError('maxlength')) || formEdit.get('obraSocial')?.hasError('pattern')">
+                  <span *ngIf="formEdit.get('obraSocial')?.hasError('required')"> Obra Social es requerida.</span>
+                  <span *ngIf="formEdit.get('obraSocial')?.hasError('maxlength')">El nombre de la Obra Social es muy largo, max: 25 caracteres.</span>
+                  <span *ngIf="formEdit.get('obraSocial')?.hasError('pattern')">Debe contener solo letras.</span>
+              </mat-error>
+          </mat-form-field>
+
         </div>
 
         <button mat-raised-button color="primary" type="submit" class="save-button">Guardar Cambios</button>

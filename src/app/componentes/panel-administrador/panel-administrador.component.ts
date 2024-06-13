@@ -7,7 +7,7 @@ import { UsuarioService } from '../../services/usuario.service';
 import { CommonModule } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
 import {MatGridListModule} from '@angular/material/grid-list';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
@@ -45,11 +45,29 @@ export class PanelAdministradorComponent {
   displayedColumnsEspecialista: string[] = ['nombre', 'apellido', 'dni', 'email', 'especialidad', 'validarEstado'];
   dataSourceValidar: any[] = [];
   selection = new SelectionModel<any>(true, []);
+  formEdit!: FormGroup;
 
+    // Crear la tabla de especialidad en la bd.
+    especialidades = [
+      {value: 'A', viewValue: 'A'},
+      {value: 'B', viewValue: 'B'},
+      {value: 'C', viewValue: 'C'},
+      {value: 'otra', viewValue: 'Otra Especialidad'}
+    ];
 
-
-  constructor(private datosUsuario: UsuarioService){
-
+  constructor(private datosUsuario: UsuarioService, private fb: FormBuilder){
+    this.formEdit = this.fb.group({
+      nombre: new FormControl("", [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z ]+$')]),
+      email: new FormControl("", [Validators.required, Validators.email]),
+      password: new FormControl("", [Validators.required, Validators.minLength(5)]),
+      edad: new FormControl("", [Validators.required, Validators.min(1)]),
+      apellido: new FormControl("", [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z ]+$')]),
+      dni: new FormControl("", [Validators.required, Validators.minLength(8), Validators.pattern('^[0-9]+$')]),
+      especialidad: new FormControl("", [Validators.required]),
+      otraEspecialidad: new FormControl("", [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z]+$')]),
+      obraSocial: new FormControl("", [Validators.required, Validators.maxLength(25), Validators.pattern('^[a-zA-Z ]+$')]),
+      rol: new FormControl("", [Validators.required, Validators.min(1), Validators.max(1)]),
+    });
   }
 
   async ngOnInit(){
@@ -71,12 +89,15 @@ export class PanelAdministradorComponent {
 
   handleClick(clickedRow: any) {
     
-    console.log('Clicked on:', clickedRow.especialidad);
+    console.log('Clicked on:', clickedRow.rol);
 
     if(clickedRow.rol == 2){
       this.esEspecialista = true;
+      this.esAdministrador = false;
+
     }else if(clickedRow.rol == 3){
       this.esEspecialista = false;
+      this.esAdministrador = false;
     }else if(clickedRow.rol == 1){
       this.esAdministrador = true;
     }else{
@@ -100,8 +121,18 @@ export class PanelAdministradorComponent {
   }
 
   async actualizarDatos() {
+
+  if (this.formEdit.valid) 
+  {             
     await this.datosUsuario.actualizarColeccion('usuarios', 'email', this.selectedUser.email,this.selectedUser);
     this.selectedUser = null; 
+
+  }else{
+    Object.values(this.formEdit.controls).forEach(control => {
+      control.markAsTouched();
+    });
+  }
+
   }
 
   actualizarTablaEspecialista(){
@@ -117,6 +148,10 @@ export class PanelAdministradorComponent {
       console.error('Error al buscar usuarios:', error);
     });
   }
+
+  volverASeleccion() {
+    this.formEdit.get('especialidad')?.setValue('');
+  } 
 
   
 }
