@@ -47,6 +47,17 @@ export class AlertsService {
     }
   }
   
+  mostrarAlertaModal(titulo: string, texto: string, imageUrl: string, imageWidth: number, imageHeight: number, imageAlt: string) {
+    Swal.fire({
+      title: titulo,
+      text: texto,
+      imageUrl: imageUrl,
+      imageWidth: imageWidth,
+      imageHeight: imageHeight,
+      imageAlt: imageAlt
+    });
+  }
+  
   mostrarAlerta(tipo: boolean, mensaje: string, duracion:number) {
     this.configuracionAlerta(tipo, mensaje, duracion);
   }

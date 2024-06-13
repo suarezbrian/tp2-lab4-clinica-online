@@ -15,6 +15,14 @@ export const routes: Routes = [
     {
         path: 'registro',
         loadComponent:()=> import('./componentes/registro/registro.component').then(c => c.RegistroComponent)
+    },
+    {
+        path: 'login',
+        loadComponent:()=> import('./componentes/login/login.component').then(c => c.LoginComponent)
+    },
+    {
+        path: 'panel-administrador',
+        loadComponent:()=> import('./componentes/panel-administrador/panel-administrador.component').then(c => c.PanelAdministradorComponent)
     }
 
 

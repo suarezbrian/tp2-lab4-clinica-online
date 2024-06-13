@@ -1,0 +1,124 @@
+.demo-table {
+  width: 100%;
+}
+
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  border-color: currentColor;
+}
+
+.demo-row-is-clicked {
+  font-weight: bold;
+}
+
+.mat-card {
+    width: 100%;
+    max-width: 850px;
+    margin: 20px auto;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.form-field {
+    flex: 1;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+.save-button {
+    margin-top: 20px;
+    width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tabla-especialistas {
+  float: left;
+  width: 50%;
+  border: 1px solid #ccc; 
+  border-radius: 8px; 
+  padding: 10px; 
+  margin-right: 10px; 
+}
+
+.detalle-especialista {
+  flex: 1;
+  border: 1px solid #ccc; 
+  border-radius: 8px; 
+  padding: 10px; 
+  background-color: #f9f9f9; 
+}
+
+.cuadro-detalle {
+  padding: 10px;
+}
+
+.cuadro-detalle h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.cuadro-detalle p {
+  margin-bottom: 5px;
+}
+
+.cuadro-detalle button {
+  margin-top: 10px;
+}
+
+.mat-tab-group {
+  margin-bottom: 48px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc; /* Borde sólido */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  background-color: #fff; /* Fondo blanco */
+}
+
+.form-field {
+  margin-bottom: 20px;
+  width: calc(50% - 10px); /* Ajuste para dos campos por fila */
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px; /* Espacio entre los campos */
+}
+
+button[type="submit"] {
+  margin-top: 20px;
+  align-self: flex-end;
+}

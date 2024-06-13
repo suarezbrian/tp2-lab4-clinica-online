@@ -1,11 +1,9 @@
 import { Persona } from "./persona";
 
-export interface Especialista extends Persona {
+export interface Administrador extends Persona {
     
     password: string;
-    especialidad: string;
     imagenUno?: File; 
     rutaArchivoUno?: string;
-    validarEstado?: boolean;
 
-  }
+}

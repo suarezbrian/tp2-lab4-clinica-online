@@ -1,1 +1,48 @@
-<p>login works!</p>
+<br>
+<br>
+<div class="mat-card">
+    <mat-card>
+      <br>
+      <mat-card-title>Entrar al sistema.</mat-card-title>
+      <br>
+      <br>
+      <mat-card-content>
+        <form [formGroup]="formLogin" (ngSubmit)="entrar()" class="form">
+          <div class="form-row">
+            <mat-form-field class="form-field">
+              <mat-label>Correo Electronico</mat-label>
+              <input type="text" matInput formControlName="email" placeholder="mail@example.com">
+              <mat-error *ngIf="formLogin.get('email')?.touched && (formLogin.get('email')?.hasError('required') || formLogin.get('email')?.hasError('email'))">
+                <span *ngIf="formLogin.get('email')?.hasError('required')">Email es requerido.</span>
+                <span *ngIf="formLogin.get('email')?.hasError('email')">Email no es válido.</span>
+              </mat-error>
+            </mat-form-field>
+    
+            <mat-form-field class="form-field">
+              <mat-label>Password</mat-label>
+              <input type="password" matInput formControlName="password">
+              <mat-error *ngIf="formLogin.get('password')?.touched && (formLogin.get('password')?.hasError('required') || formLogin.get('password')?.hasError('minlength'))">
+                <span *ngIf="formLogin.get('password')?.hasError('required')">Contraseña es requerida.</span>
+                <span *ngIf="formLogin.get('password')?.hasError('minlength')">La contraseña es muy corta, min: 5 digitos.</span>
+              </mat-error>
+            </mat-form-field>
+          </div>
+    
+          <div class="button">
+            <button type="submit" mat-button color="primary">Login</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+    
+    <br>
+    <mat-checkbox class="autoCompletar" [color]="'warn'" (change)="onCheckboxChange($event, 'pac')" [checked]="isPacChecked" [disabled]="isEspeChecked || isAdmChecked">
+      Auto completar Paciente
+    </mat-checkbox>
+    <mat-checkbox class="autoCompletar" [color]="'warn'" (change)="onCheckboxChange($event, 'espe')" [checked]="isEspeChecked" [disabled]="isPacChecked || isAdmChecked">
+      Auto completar Especialista
+    </mat-checkbox>
+    <mat-checkbox class="autoCompletar" [color]="'warn'" (change)="onCheckboxChange($event, 'adm')" [checked]="isAdmChecked" [disabled]="isPacChecked || isEspeChecked">
+      Auto completar Administrador
+    </mat-checkbox>
+  </div>

@@ -1,0 +1,107 @@
+import { Component } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTableModule} from '@angular/material/table';
+import {MatGridListModule} from '@angular/material/grid-list';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTabsModule} from '@angular/material/tabs';
+import { MatSelectModule } from '@angular/material/select';
+import { CommonModule } from '@angular/common';
+import { Especialista } from '../../../interfaces/especialista';
+import { AuthenticatorService } from '../../../services/authenticator.service';
+
+@Component({
+  selector: 'app-registro-especialista',
+  standalone: true,
+  imports: [MatSelectModule, MatTabsModule, MatCheckboxModule, MatDividerModule, MatTableModule, MatButtonModule, MatIconModule, CommonModule, MatGridListModule, MatInputModule, MatFormFieldModule,  FormsModule, ReactiveFormsModule, CommonModule],
+  templateUrl: './registro-especialista.component.html',
+  styleUrl: './registro-especialista.component.css'
+})
+export class RegistroEspecialistaComponent {
+
+  formEspecialista!: FormGroup;
+  imagenUno: FormControl = new FormControl('', Validators.required);
+  checked: boolean = false;
+
+    // Crear la tabla de especialidad en la bd.
+  especialidades = [
+    {value: 'A', viewValue: 'A'},
+    {value: 'B', viewValue: 'B'},
+    {value: 'C', viewValue: 'C'},
+    {value: 'otra', viewValue: 'Otra Especialidad'}
+  ];
+
+  constructor(private especialista: FormBuilder, private auth: AuthenticatorService){
+    this.formEspecialista = this.especialista.group({
+      nombre: new FormControl("", [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z ]+$')]),
+      email: new FormControl("", [Validators.required, Validators.email]),
+      password: new FormControl("", [Validators.required, Validators.minLength(5)]),
+      edad: new FormControl("", [Validators.required, Validators.min(1)]),
+      apellido: new FormControl("", [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z ]+$')]),
+      dni: new FormControl("", [Validators.required, Validators.minLength(8), Validators.pattern('^[0-9]+$')]),
+      especialidad: new FormControl("", [Validators.required]),
+      imagenUno: new FormControl("", [Validators.required])
+    });
+  }
+
+  registrarEspecialista(){
+    if (this.formEspecialista.valid) {          
+        const especialista: Especialista = {
+        nombre: this.formEspecialista.get('nombre')?.value,
+        apellido: this.formEspecialista.get('apellido')?.value,
+        edad: this.formEspecialista.get('edad')?.value,
+        dni: this.formEspecialista.get('dni')?.value,
+        email: this.formEspecialista.get('email')?.value,
+        fecha_registro: new Date(),
+        rol: 2,
+        password: this.formEspecialista.get('password')?.value,
+        especialidad: this.formEspecialista.get('especialidad')?.value, 
+        imagenUno: this.formEspecialista.get('imagenUno')?.value
+      }
+      
+      this.formEspecialista.reset();
+      this.imagenUno.reset();
+      this.auth.registro(especialista, 'espe');
+      
+    }else{
+      Object.values(this.formEspecialista.controls).forEach(control => {
+        control.markAsTouched();
+      });
+    }
+  }
+
+  handleFileInputChange(event: Event, controlName: string) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];    
+      this.formEspecialista.get(controlName)?.setValue(file);  
+      this.imagenUno.setValue(file.name);  
+    }
+  }
+
+  onCheckboxChange(event: MatCheckboxChange) {
+    if (event.checked) {
+      this.formEspecialista.patchValue({
+        nombre: "Especialista",
+        email: "especialista@gmail.com",
+        password: "1122334455",
+        edad: "24",
+        apellido: "Charli",
+        dni: "30251756",
+        especialidad: "A"
+      });
+    } else {
+      this.formEspecialista.reset();
+      this.imagenUno.reset();
+    }
+  }
+
+  volverASeleccion() {
+    this.formEspecialista.get('especialidad')?.setValue('');
+  } 
+
+}

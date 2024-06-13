@@ -1,0 +1,32 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc; 
+    border-radius: 8px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    background-color: #fff;
+  }
+  
+  .form-field {
+    margin-bottom: 20px;
+    width: calc(50% - 10px); 
+  }
+  
+  .form-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; 
+  }
+  
+  button[type="submit"] {
+    margin-top: 20px;
+    align-self: flex-end;
+  }
+
+  .autoCompletar{
+    background-color: rgb(145, 145, 145);
+    width: 500px;
+}

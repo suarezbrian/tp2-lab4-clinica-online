@@ -1,0 +1,87 @@
+<br>
+<br>
+<form [formGroup]="formAdministrador" (ngSubmit)="registrarAdministrador()" class="form">
+    <strong style="text-align: start;">Registrar Administrador</strong>
+    <br>
+    <div class="form-row">
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="nombre" required>
+            <mat-error *ngIf="formAdministrador.get('nombre')?.touched && (formAdministrador.get('nombre')?.hasError('required') || formAdministrador.get('nombre')?.hasError('pattern')) || formAdministrador.get('nombre')?.hasError('maxlength')">
+                <span *ngIf="formAdministrador.get('nombre')?.hasError('required')">Nombre es requerido.</span>
+                <span *ngIf="formAdministrador.get('nombre')?.hasError('pattern')">Debe contener solo letras.</span>
+                <span *ngIf="formAdministrador.get('nombre')?.hasError('maxlength')">El nombre es muy largo, max: 15 caracteres.</span>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Apellido</mat-label>
+            <input matInput formControlName="apellido" required>
+            <mat-error *ngIf="formAdministrador.get('apellido')?.touched && (formAdministrador.get('apellido')?.hasError('required') || formAdministrador.get('apellido')?.hasError('pattern')) || formAdministrador.get('apellido')?.hasError('maxlength')">
+                <span *ngIf="formAdministrador.get('apellido')?.hasError('required')">Apellido es requerido.</span>
+                <span *ngIf="formAdministrador.get('apellido')?.hasError('pattern')">Debe contener solo letras.</span>
+                <span *ngIf="formAdministrador.get('apellido')?.hasError('maxlength')">El apellido es muy largo, max: 15 caracteres.</span>
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="form-row">
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Edad</mat-label>
+            <input matInput type="number" formControlName="edad" required>
+            <mat-error *ngIf="formAdministrador.get('edad')?.touched && (formAdministrador.get('edad')?.hasError('required') || formAdministrador.get('edad')?.hasError('min'))">
+                <span *ngIf="formAdministrador.get('edad')?.hasError('required')"> Edad es requerido.</span>
+                <span *ngIf="formAdministrador.get('edad')?.hasError('min')">La Edad minima para el especialista debe ser de 1 año.</span>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>DNI</mat-label>
+            <input matInput formControlName="dni" required>
+            <mat-error *ngIf="formAdministrador.get('dni')?.touched && (formAdministrador.get('dni')?.hasError('required') || formAdministrador.get('dni')?.hasError('minlength'))">
+                <span *ngIf="formAdministrador.get('dni')?.hasError('required')"> DNI es requerido.</span>
+                <span *ngIf="formAdministrador.get('dni')?.hasError('minlength')">Formato incorrecto. El DNI debe estar compuesto por 8 digitos.</span>
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="form-row">
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Mail</mat-label>
+            <input matInput type="email" formControlName="email" required>
+            <mat-error *ngIf="formAdministrador.get('email')?.touched && (formAdministrador.get('email')?.hasError('required') || formAdministrador.get('email')?.hasError('email'))">
+                <span *ngIf="formAdministrador.get('email')?.hasError('required')"> Email es requerido.</span>
+                <span *ngIf="formAdministrador.get('email')?.hasError('pattern')">Email no es válido.</span>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password" required>
+            <mat-error *ngIf="formAdministrador.get('password')?.touched && (formAdministrador.get('password')?.hasError('required') || formAdministrador.get('password')?.hasError('minlength'))">
+                <span *ngIf="formAdministrador.get('password')?.hasError('required')">  Contraseña es requerida.</span>
+                <span *ngIf="formAdministrador.get('password')?.hasError('minlength')">La contraseña es muy corta, min: 5 digitos.</span>
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="form-row">
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Imagen 1 de perfil</mat-label>
+            <button mat-icon-button matPrefix (click)="f_input3.click()">
+              <mat-icon>attach_file</mat-icon>
+            </button>
+            <input type="text" readonly matInput [formControl]="imagenUno">
+            <input
+              type="file"
+              hidden
+              #f_input3
+              (change)="handleFileInputChange($event, 'imagenUno')"
+            />
+            <mat-error *ngIf="formAdministrador.get('imagenUno')?.hasError('required')">
+              Imagen de Perfil 1 es requerida
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <button mat-raised-button color="primary" type="submit">Registrar Administrador</button>
+</form>
+
+<br>
+<mat-divider></mat-divider>
+<mat-checkbox class="autoCompletar" [color]="'warn'" [(ngModel)]="checked" (change)="onCheckboxChange($event)">
+    Auto completar los campos del registro
+</mat-checkbox>
