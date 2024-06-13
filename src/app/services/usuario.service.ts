@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, getDocs, query, where } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { AlertsService } from './alerts.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class UsuarioService {
   private _dataCollection: BehaviorSubject<any[] | null> = new BehaviorSubject<any[] | null>(null);
   dataCollection$ = this._dataCollection.asObservable();
 
-  constructor(private firestore: Firestore) { }
+  constructor(private firestore: Firestore, private alertService:AlertsService) { }
 
   obtenerCollection(collectionName: string): Observable<any[]> {
     const collectionRef = collection(this.firestore, collectionName);
@@ -67,4 +68,29 @@ export class UsuarioService {
       throw new Error(`No se pudo buscar documentos por ${campo}.`);
     }
   }
+
+  async actualizarColeccion(nombreColeccion: string, campoBusqueda: string, valorBusqueda: any, camposActualizar: { [key: string]: any }): Promise<void> {
+
+    try {
+      const coleccion = collection(this.firestore, nombreColeccion);
+      const querySnapshot = await getDocs(query(coleccion, where(campoBusqueda, '==', valorBusqueda)));
+  
+      if (querySnapshot.empty) {
+        console.log(`No se encontró ningún documento con ${campoBusqueda} = ${valorBusqueda}.`);
+        return;
+      }
+  
+      querySnapshot.forEach(async (doc) => {
+        try {
+          await updateDoc(doc.ref, camposActualizar);
+          this.alertService.mostrarAlerta(true, 'Documento actualizado correctamente.', 2000);
+        } catch (error) {
+          this.alertService.mostrarAlerta(false, 'No se pudo actualizar el documento.', 2000);
+        }
+      });
+    } catch (error) {
+      this.alertService.mostrarAlerta(false, 'No se pudo buscar el documento.', 2000);
+    }
+  }
+
 }

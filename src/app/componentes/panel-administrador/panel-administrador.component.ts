@@ -65,6 +65,47 @@ export class PanelAdministradorComponent {
       }
     });
 
+    this.actualizarTablaEspecialista();
+
+  }
+
+  handleClick(clickedRow: any) {
+    
+    console.log('Clicked on:', clickedRow.especialidad);
+
+    if(clickedRow.rol == 2){
+      this.esEspecialista = true;
+    }else if(clickedRow.rol == 3){
+      this.esEspecialista = false;
+    }else if(clickedRow.rol == 1){
+      this.esAdministrador = true;
+    }else{
+      this.esAdministrador = false;
+    }
+
+    this.selectedUser = clickedRow;
+  }
+
+  async habilitarEspecialista(){
+
+    this.especialistaSeleccionado.validarEstado = true;
+    await this.datosUsuario.actualizarColeccion('usuarios', 'email', this.especialistaSeleccionado.email, this.especialistaSeleccionado);
+    this.actualizarTablaEspecialista();
+    this.especialistaSeleccionado = null;
+
+  }
+
+  seleccionarEspecialista(clickedRow: any){
+    this.especialistaSeleccionado = clickedRow;
+  }
+
+  async actualizarDatos() {
+    await this.datosUsuario.actualizarColeccion('usuarios', 'email', this.selectedUser.email,this.selectedUser);
+    this.selectedUser = null; 
+  }
+
+  actualizarTablaEspecialista(){
+
     this.datosUsuario.buscarVariosDatosPorCampo('usuarios', 'validarEstado', false)
     .then((usuarios: any[]) => {
       this.dataSourceValidar = usuarios.map((element) => ({
@@ -75,36 +116,6 @@ export class PanelAdministradorComponent {
     .catch((error) => {
       console.error('Error al buscar usuarios:', error);
     });
-  }
-
-  handleClick(clickedRow: any) {
-    
-    console.log('Clicked on:', clickedRow.especialidad);
-
-    if(clickedRow.rol == 2){
-      this.esEspecialista = false;
-    }else if(clickedRow.rol == 3){
-      this.esEspecialista = true;
-    }else if(clickedRow.rol == 1){
-      this.esAdministrador = true;
-    }else{
-      this.esAdministrador = false;
-    }
-
-    this.selectedUser = clickedRow;
-  }
-
-  habilitarEspecialista(clickedRow: any){
-
-  }
-
-  seleccionarEspecialista(clickedRow: any){
-    this.especialistaSeleccionado = clickedRow;
-  }
-
-  submitEditForm() {
-
-    this.selectedUser = null; 
   }
 
   

@@ -83,11 +83,12 @@
 <div class="mat-card">
 
     <h3 style="text-align: center;">Modo Edición</h3>
-    <strong *ngIf="!esEspecialista && selectedUser">Se seleccionó un PACIENTE.</strong>
-    <strong *ngIf="esEspecialista && selectedUser">Se seleccionó un ESPECIALISTA.</strong>
+    <strong *ngIf="!esEspecialista && selectedUser && !esAdministrador">Se seleccionó un PACIENTE.</strong>
+    <strong *ngIf="esEspecialista && selectedUser && !esAdministrador">Se seleccionó un ESPECIALISTA.</strong>
+    <strong *ngIf="esAdministrador && selectedUser">Se seleccionó un ADMINISTRADOR.</strong>
 
     <span *ngIf="!selectedUser">Seleccione una fila para empezar a editar.</span>
-    <form *ngIf="selectedUser" (ngSubmit)="submitEditForm()" class="edit-form">
+    <form *ngIf="selectedUser" (ngSubmit)="actualizarDatos()" class="edit-form">
 
         <div class="form-row">
 
@@ -177,7 +178,7 @@
         <p><strong>Especialidad:</strong> {{ especialistaSeleccionado?.especialidad }}</p>
         <p><strong>Rol:</strong> {{ especialistaSeleccionado.rol == 1? 'Administrador': especialistaSeleccionado.rol == 2? 'Especialista': especialistaSeleccionado.rol == 3? 'Paciente': '(N/A)' }}</p>
 
-        <button mat-raised-button color="primary" (click)="habilitarEspecialista(selectedUser)">Habilitar Especialista</button>
+        <button mat-raised-button color="primary" (click)="habilitarEspecialista()">Habilitar Especialista</button>
       </div>
     </div>
   </div>
