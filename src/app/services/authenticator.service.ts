@@ -144,7 +144,7 @@ export class AuthenticatorService {
             const email = user.email;
 
             this.datos = await this.usuarioService.buscarDatoPorCampo('usuarios', 'email', email);  
-            
+          
             if (!this.esRegistro && !this.esLogin) {
               this.sharedService.estadoCompartido = {
                 estaLogeado: true,

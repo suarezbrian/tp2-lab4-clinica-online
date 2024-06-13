@@ -1,4 +1,11 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guard/guard.guard';
+
+export enum Rol {
+    Administrador = 1,
+    Especialista = 2,
+    Paciente = 3
+}
 
 export const routes: Routes = [
 
@@ -22,7 +29,9 @@ export const routes: Routes = [
     },
     {
         path: 'panel-administrador',
-        loadComponent:()=> import('./componentes/panel-administrador/panel-administrador.component').then(c => c.PanelAdministradorComponent)
+        loadComponent:()=> import('./componentes/panel-administrador/panel-administrador.component').then(c => c.PanelAdministradorComponent),
+        canActivate: [authGuard],
+        data: { rolesPermitidos: [Rol.Administrador] }
     }
 
 
