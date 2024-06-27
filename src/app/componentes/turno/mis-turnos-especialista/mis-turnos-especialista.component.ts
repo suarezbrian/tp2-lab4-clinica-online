@@ -22,7 +22,7 @@ export class MisTurnosEspecialistaComponent {
       fecha: '25/06/2024',
       estado: 'Confirmado'
     },
-    // Agrega más turnos según sea necesario
+   
   ];
   
   constructor(){

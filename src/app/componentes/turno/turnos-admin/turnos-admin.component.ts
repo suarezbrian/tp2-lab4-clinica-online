@@ -24,7 +24,7 @@ export class TurnosAdminComponent {
       estado: 'Confirmado',
       comentarioCancelacion: ''
     },
-    // Agrega más turnos según sea necesario
+    
   ];
 
   constructor(){}
