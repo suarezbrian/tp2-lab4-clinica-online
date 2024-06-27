@@ -10,3 +10,30 @@
   button[mat-icon-button]:hover {
     transform: scale(1.1);
   }
+
+  .rounded-card {
+    border-radius: 50%;
+    overflow: hidden;
+    padding: 20px;
+
+  }
+  
+  .card-button {
+    background: none;
+    border: none;
+    padding: 0;
+    
+  }
+  
+  .card-button .horizontal-card {
+    border: solid rgb(134, 134, 134);
+  }
+  
+  .card-body {
+    text-align: center;
+  }
+  
+  .card .material-icons {
+    font-size: 48px;
+    margin-right: 10px;
+  }
