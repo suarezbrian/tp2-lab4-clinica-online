@@ -1,0 +1,30 @@
+<div class="container mt-5">
+    <h2 class="mb-4">Mis Turnos - Especialista</h2>
+  
+    <div class="filters mb-4">
+      <input type="text" class="form-control mb-2" placeholder="Filtrar por especialidad" id="filterEspecialidad">
+      <input type="text" class="form-control" placeholder="Filtrar por paciente" id="filterPaciente">
+    </div>
+  
+    <div class="list-group">
+      <div *ngFor="let turno of turnos" class="list-group-item turn-card">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h5>Especialidad: {{ turno.especialidad }}</h5>
+            <p>Paciente: {{ turno.paciente }}</p>
+            <p>Fecha: {{ turno.fecha }}</p>
+            <p>Estado: 
+              <span [ngClass]="{'badge bg-success': turno.estado === 'Confirmado', 'badge bg-warning': turno.estado === 'Pendiente', 'badge bg-secondary': turno.estado === 'Finalizado'}">{{ turno.estado }}</span>
+            </p>
+          </div>
+          <div class="btn-group">
+            <button *ngIf="turno.estado === 'Pendiente'" class="btn btn-danger" (click)="cancelarTurno(turno)">Cancelar turno</button>
+            <button *ngIf="turno.estado === 'Pendiente'" class="btn btn-secondary" (click)="rechazarTurno(turno)">Rechazar turno</button>
+            <button *ngIf="turno.estado === 'Pendiente'" class="btn btn-success" (click)="aceptarTurno(turno)">Aceptar turno</button>
+            <button *ngIf="turno.estado === 'Confirmado'" class="btn btn-primary" (click)="finalizarTurno(turno)">Finalizar turno</button>
+            <button class="btn btn-info" (click)="verResena(turno)">Ver reseña</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

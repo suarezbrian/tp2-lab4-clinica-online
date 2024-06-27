@@ -10,6 +10,8 @@ import { getStorage, ref, uploadBytesResumable } from '@angular/fire/storage';
 export class EspecialidadService {
 
   private storage = getStorage();
+  private subscription!: Subscription;
+  private _dataCollection: BehaviorSubject<any[] | null> = new BehaviorSubject<any[] | null>(null);
 
   constructor(
     private firestore: Firestore
@@ -49,5 +51,20 @@ export class EspecialidadService {
     }
   }
 
+  async guardarEspecialidad(nombre: string) {
+    try {
+
+      const especialidad: any = {
+        nombre: nombre
+      };
+
+      const especialistaCollection = collection(this.firestore, 'especialidad');
+      await addDoc(especialistaCollection, especialidad);
+
+    } catch (error) {
+      console.error('Error al guardar los datos del especialista:', error);
+      throw error;
+    }
+  }
 
 }

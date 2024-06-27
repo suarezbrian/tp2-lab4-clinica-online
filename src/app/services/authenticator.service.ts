@@ -75,7 +75,9 @@ export class AuthenticatorService {
     createUserWithEmailAndPassword(this.auth, data.email, data.password).then((respuesta) => {
       if (respuesta.user.email !== null) {
         sendEmailVerification(respuesta.user).then(() => {
+          if(data.otraEspecialidad){
 
+          }
           this.garudarTipoUsuario(data, tipo);
           this.alertService.mostrarAlerta(true, this.msjSucces, 1500);
           this.alertService.mostrarAlertaModal('Registro Exitoso.','Se ha enviado un correo de verificación a tu dirección de correo electrónico. Por favor revisa tu bandeja de entrada y haz clic en el enlace de verificación para completar tu registro.',          'https://img.freepik.com/vector-premium/sobre-abierto-documento-icono-linea-marca-verificacion-verde-correo-mensaje-confirmacion-oficial-enviado-exito-correo-electronico-verificacion-entrega-correo-electronico-diseno-plano-vector_662353-720.jpg',200, 200, 'Verificación de mail');     

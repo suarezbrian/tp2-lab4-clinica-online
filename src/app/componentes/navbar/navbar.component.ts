@@ -24,13 +24,11 @@ export class NavbarComponent {
     
   }
 
-  ngOnInit() {
-   
+  ngOnInit() {   
     this.sharedService.estadoCompartido$.subscribe(estado => {
       this.estaLogeado = estado.estaLogeado;
       this.usuarioLogeado = estado.usuarioLogeado;
     });
-
   } 
 
   cerrarSesion(){    

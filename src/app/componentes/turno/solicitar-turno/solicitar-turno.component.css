@@ -1,0 +1,17 @@
+.container {
+    max-width: 600px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .btn {
+    align-self: flex-end;
+    margin-top: 1rem;
+  }

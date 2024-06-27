@@ -47,7 +47,7 @@
             <input matInput type="email" formControlName="email" required>
             <mat-error *ngIf="formAdministrador.get('email')?.touched && (formAdministrador.get('email')?.hasError('required') || formAdministrador.get('email')?.hasError('email'))">
                 <span *ngIf="formAdministrador.get('email')?.hasError('required')"> Email es requerido.</span>
-                <span *ngIf="formAdministrador.get('email')?.hasError('pattern')">Email no es válido.</span>
+                <span *ngIf="formAdministrador.get('email')?.hasError('email')">Email no es válido.</span>
             </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill" class="form-field">

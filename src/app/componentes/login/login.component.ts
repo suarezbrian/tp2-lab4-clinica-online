@@ -6,6 +6,9 @@ import {MatCardModule} from '@angular/material/card';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthenticatorService } from '../../services/authenticator.service';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
+import { SharedServiceService } from '../../services/shared-service.service';
+import { UsuarioService } from '../../services/usuario.service';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-login',
@@ -17,15 +20,68 @@ import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox
 export class LoginComponent {
 
   formLogin: FormGroup;
-  isPacChecked = false;
-  isEspeChecked = false;
-  isAdmChecked = false;
+  especialistas: any;
+  pacientes: any;
+  administrador: any;
+  imagenes: any;
+  imagenesPaciente: string[] = [];
+  imagenesEspecialista: string[] = [];
+  imagenesAdministrador: string[] = [];
 
-  constructor(private login: FormBuilder,  private auth: AuthenticatorService){
+  constructor(private login: FormBuilder,  private auth: AuthenticatorService, private sharedService: SharedServiceService, private usuarioService: UsuarioService){
     this.formLogin = this.login.group({
       email: new FormControl("", [Validators.required, Validators.email]),
       password: new FormControl("", [Validators.required, Validators.minLength(5)])
     });
+  }
+
+  ngOnInit() {
+    Promise.all([
+      this.usuarioService.buscarVariosDatosPorCampo('usuarios', 'rol', 2),
+      this.usuarioService.buscarVariosDatosPorCampo('usuarios', 'rol', 3),
+      this.usuarioService.buscarVariosDatosPorCampo('usuarios', 'rol', 1)
+    ])
+    .then(([especialistas, pacientes, administrador]) => {
+      this.especialistas = this.obtenerUltimosElementos(especialistas, 2);      
+      this.pacientes = this.obtenerUltimosElementos(pacientes, 3);     
+      this.administrador = this.obtenerUltimosElementos(administrador, 1);  
+
+      this.guardarImagenes(this.pacientes, this.imagenesPaciente);
+      this.guardarImagenes(this.especialistas, this.imagenesEspecialista);
+      this.guardarImagenes(this.administrador, this.imagenesAdministrador);
+    })
+    .catch((error) => {
+      console.error('Error al buscar usuarios:', error);
+    });
+
+
+  }
+
+  async guardarImagenes(usuarios: any[], arregloImagenes: string[]) {
+    for (let usuario of usuarios) {
+      let ruta = await this.cargarImagenes(usuario.rutaArchivoUno);
+      arregloImagenes.push(ruta);
+    }
+  }
+
+  private obtenerUltimosElementos(usuarios: any[], cantidad: number): any[] {
+    return usuarios
+      .sort((a, b) => (b.fecha_registro as Timestamp).toDate().getTime() - (a.fecha_registro as Timestamp).toDate().getTime())
+      .slice(0, cantidad)
+      .map((element) => ({
+        ...element,
+        fecha_registro: (element.fecha_registro as Timestamp).toDate()        
+      }));
+  }
+
+  async cargarImagenes(rutaCarpeta: string): Promise<string> {    
+    try {
+      const imagenes = await this.usuarioService.obtenerImagen(rutaCarpeta);      
+      return imagenes;
+    } catch (error) {
+      console.error('Error al cargar las imágenes:', error);
+      throw error;
+    }
   }
 
   entrar() {
@@ -42,51 +98,26 @@ export class LoginComponent {
     });
   }
 
-  onCheckboxChange(event: MatCheckboxChange, tipo: string) {
-    if (event.checked) {
-      switch(tipo) {
-        case 'espe':
-          this.formLogin.patchValue({
-            email: 'suarezbrianalan@gmail.com',
-            password: '1122334455'
-          });
-          this.isPacChecked = false;
-          this.isAdmChecked = false;
-          break;
-        case 'pac':
-          this.formLogin.patchValue({
-            email: 'smurft.jimmy@gmail.com',
-            password: '1122334455'
-          });
-          this.isEspeChecked = false;
-          this.isAdmChecked = false;
-          break;
-        case 'adm':
-          this.formLogin.patchValue({
-            email: 'brian44330@gmail.com',
-            password: '1122334455'
-          });
-          this.isPacChecked = false;
-          this.isEspeChecked = false;
-          break;
-      }
-    } else {
-      this.formLogin.reset();
-    }
-
-    this.actualizarEstadoCheck(tipo, event.checked);
-  }
-
-  private actualizarEstadoCheck(tipo: string, isChecked: boolean) {
-    switch(tipo) {
+  autoComplete(tipo: string, index: number) {
+    this.formLogin.reset();
+    switch (tipo) {   
       case 'espe':
-        this.isEspeChecked = isChecked;
+        this.formLogin.patchValue({
+          email: this.especialistas[index].email,
+          password: this.especialistas[index].password
+        });
         break;
       case 'pac':
-        this.isPacChecked = isChecked;
+        this.formLogin.patchValue({
+          email: this.pacientes[index].email,
+          password: this.pacientes[index].password
+        });
         break;
-      case 'adm':
-        this.isAdmChecked = isChecked;
+      case 'adm':      
+        this.formLogin.patchValue({
+          email: this.administrador[index].email,
+          password: this.administrador[index].password
+        });
         break;
     }
   }

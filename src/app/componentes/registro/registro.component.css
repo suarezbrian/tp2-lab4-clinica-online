@@ -1,0 +1,12 @@
+.back-button-container {
+    margin: 10px; 
+  }
+  
+  button[mat-icon-button] {
+    color: #007bff; 
+    transition: transform 0.2s;
+  }
+  
+  button[mat-icon-button]:hover {
+    transform: scale(1.1);
+  }

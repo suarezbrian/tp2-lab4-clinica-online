@@ -13,11 +13,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { Especialista } from '../../../interfaces/especialista';
 import { AuthenticatorService } from '../../../services/authenticator.service';
+import { EspecialidadService } from '../../../services/especialidad.service';
+import { UsuarioService } from '../../../services/usuario.service';
 
 @Component({
   selector: 'app-registro-especialista',
   standalone: true,
-  imports: [MatSelectModule, MatTabsModule, MatCheckboxModule, MatDividerModule, MatTableModule, MatButtonModule, MatIconModule, CommonModule, MatGridListModule, MatInputModule, MatFormFieldModule,  FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [MatSelectModule, MatTabsModule, MatCheckboxModule, MatDividerModule, MatTableModule, MatButtonModule, MatIconModule, CommonModule, MatGridListModule, MatInputModule, MatFormFieldModule,  FormsModule, ReactiveFormsModule],
   templateUrl: './registro-especialista.component.html',
   styleUrl: './registro-especialista.component.css'
 })
@@ -27,15 +29,9 @@ export class RegistroEspecialistaComponent {
   imagenUno: FormControl = new FormControl('', Validators.required);
   checked: boolean = false;
 
-    // Crear la tabla de especialidad en la bd.
-  especialidades = [
-    {value: 'A', viewValue: 'A'},
-    {value: 'B', viewValue: 'B'},
-    {value: 'C', viewValue: 'C'},
-    {value: 'otra', viewValue: 'Otra Especialidad'}
-  ];
+  especialidades: any;
 
-  constructor(private especialista: FormBuilder, private auth: AuthenticatorService){
+  constructor(private especialista: FormBuilder, private auth: AuthenticatorService, private datos: UsuarioService, private especialidad: EspecialidadService){
     this.formEspecialista = this.especialista.group({
       nombre: new FormControl("", [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z ]+$')]),
       email: new FormControl("", [Validators.required, Validators.email]),
@@ -44,8 +40,20 @@ export class RegistroEspecialistaComponent {
       apellido: new FormControl("", [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z ]+$')]),
       dni: new FormControl("", [Validators.required, Validators.minLength(8), Validators.pattern('^[0-9]+$')]),
       especialidad: new FormControl("", [Validators.required]),
+      otraEspecialidad: new FormControl("", [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]),
       imagenUno: new FormControl("", [Validators.required])
     });
+  }
+
+  ngOnInit(){
+    this.datos.obtenerCollection('especialidad').subscribe({
+      next: (data: any[]) => {   
+        this.especialidades = data;        
+      },
+      error: (error) => {
+        console.error('Error al obtener usuarios:', error);
+      }
+    });  
   }
 
   registrarEspecialista(){
@@ -62,7 +70,11 @@ export class RegistroEspecialistaComponent {
         especialidad: this.formEspecialista.get('especialidad')?.value, 
         imagenUno: this.formEspecialista.get('imagenUno')?.value
       }
-      
+
+      if(this.formEspecialista.get('otraEspecialidad')?.value !== undefined){
+        this.especialidad.guardarEspecialidad(this.formEspecialista.get('otraEspecialidad')?.value);
+      }
+
       this.formEspecialista.reset();
       this.imagenUno.reset();
       this.auth.registro(especialista, 'espe');

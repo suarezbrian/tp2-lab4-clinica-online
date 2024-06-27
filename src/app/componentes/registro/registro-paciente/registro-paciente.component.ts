@@ -13,11 +13,12 @@ import { MatTabsModule} from '@angular/material/tabs';
 import { MatSelectModule } from '@angular/material/select';
 import { Paciente } from '../../../interfaces/paciente';
 import { AuthenticatorService } from '../../../services/authenticator.service';
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-registro-paciente',
   standalone: true,
-  imports: [MatSelectModule, MatTabsModule, MatCheckboxModule, MatDividerModule, MatTableModule, MatButtonModule, MatIconModule, CommonModule, MatGridListModule, MatInputModule, MatFormFieldModule,  FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [RecaptchaModule, RecaptchaFormsModule, MatSelectModule, MatTabsModule, MatCheckboxModule, MatDividerModule, MatTableModule, MatButtonModule, MatIconModule, CommonModule, MatGridListModule, MatInputModule, MatFormFieldModule,  FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './registro-paciente.component.html',
   styleUrl: './registro-paciente.component.css'
 })
@@ -101,7 +102,6 @@ export class RegistroPacienteComponent {
       this.imagenDos.reset();
     }
   }
-
   
 
 }

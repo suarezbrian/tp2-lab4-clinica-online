@@ -32,6 +32,18 @@ export const routes: Routes = [
         loadComponent:()=> import('./componentes/panel-administrador/panel-administrador.component').then(c => c.PanelAdministradorComponent),
         canActivate: [authGuard],
         data: { rolesPermitidos: [Rol.Administrador] }
+    },
+    {
+        path: 'mis-turnos',
+        loadComponent:()=> import('./componentes/turno/turno.component').then(c => c.TurnoComponent),
+        canActivate: [authGuard],
+        data: { rolesPermitidos: [Rol.Paciente,Rol.Administrador,Rol.Especialista] }
+    },
+    {
+        path: 'solicitar-turnos',
+        loadComponent:()=> import('./componentes/turno/solicitar-turno/solicitar-turno.component').then(c => c.SolicitarTurnoComponent),
+        canActivate: [authGuard],
+        data: { rolesPermitidos: [Rol.Paciente,Rol.Administrador] }
     }
 
 

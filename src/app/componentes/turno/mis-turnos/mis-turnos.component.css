@@ -1,0 +1,42 @@
+.filters {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .turn-card {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+  }
+  
+  .turn-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .btn-group button {
+    margin-left: 10px;
+  }
+  
+  .badge {
+    font-size: 14px;
+    padding: 5px 10px;
+  }
+  
+  .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
+  }
+  
+  .card-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .card-text {
+    font-size: 16px;
+    color: #555;
+  }

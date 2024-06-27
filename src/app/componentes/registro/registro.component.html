@@ -1,10 +1,40 @@
-<mat-tab-group [backgroundColor]="'primary'" dynamicHeight>
-    <mat-tab label="Pacientes">
-      <app-registro-paciente></app-registro-paciente>
-    </mat-tab>
-    
-    <mat-tab label="Especialistas">
-      <app-registro-especialista></app-registro-especialista>
-    </mat-tab>
-    
-</mat-tab-group>
+<div class="container mt-5" *ngIf="!esRegistroEspecialista && !esRegistroPaciente">
+  <div class="row align-items-center">
+    <div class="col-md-5">
+      <button class="card-button w-100" (click)="registrarPaciente()">
+        <div class="card horizontal-card text-center">
+          <div class="card-body d-flex align-items-center justify-content-center">
+            <i class="material-icons md-48">person_add</i>
+            <div>
+              <h5 class="card-title">Registrar Paciente</h5>
+              <p class="card-text">Formulario para registrar nuevos pacientes.</p>
+            </div>
+          </div>
+        </div>
+      </button>
+    </div>
+    <div class="col-md-2">
+      <div class="divider"></div>
+    </div>
+    <div class="col-md-5">
+      <button class="card-button w-100" (click)="registrarEspecialista()">
+        <div class="card horizontal-card text-center">
+          <div class="card-body d-flex align-items-center justify-content-center">
+            <i class="material-icons md-48">person_add</i>
+            <div>
+              <h5 class="card-title">Registrar Especialista</h5>
+              <p class="card-text">Formulario para registrar nuevos especialistas.</p>
+            </div>
+          </div>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="back-button-container" *ngIf="esRegistroEspecialista || esRegistroPaciente">
+  <button mat-icon-button (click)="volver()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+</div>
+<app-registro-paciente *ngIf="esRegistroPaciente"></app-registro-paciente>
+<app-registro-especialista *ngIf="esRegistroEspecialista"></app-registro-especialista>

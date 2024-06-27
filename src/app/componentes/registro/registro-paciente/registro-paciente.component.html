@@ -56,7 +56,7 @@
             <input matInput type="email" formControlName="email" required>
             <mat-error *ngIf="formPaciente.get('email')?.touched && (formPaciente.get('email')?.hasError('required') || formPaciente.get('email')?.hasError('email'))">
                 <span *ngIf="formPaciente.get('email')?.hasError('required')"> Email es requerido.</span>
-                <span *ngIf="formPaciente.get('email')?.hasError('pattern')">Email no es válido.</span>
+                <span *ngIf="formPaciente.get('email')?.hasError('email')">Email no es válido.</span>
             </mat-error>
         </mat-form-field>
     </div>
@@ -104,6 +104,7 @@
             </mat-error>
         </mat-form-field>
     </div>
+
     <button mat-raised-button color="primary" type="submit">Registrar Paciente</button>
 </form>
 

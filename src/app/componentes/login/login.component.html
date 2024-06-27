@@ -34,15 +34,34 @@
         </form>
       </mat-card-content>
     </mat-card>
+
+    <div class="quick-access-buttons">
+      <ng-container *ngFor="let imagen of imagenesPaciente; let i = index">
+        <div class="profile-container">
+          <button class="profile-button" (click)="autoComplete('pac', i)">
+            <img [src]="imagen" [alt]="'Paciente ' + (i + 1)">
+          </button>
+          <div class="profile-name">{{ pacientes[i].nombre }}</div>
+        </div>
+      </ng-container>
     
-    <br>
-    <mat-checkbox class="autoCompletar" [color]="'warn'" (change)="onCheckboxChange($event, 'pac')" [checked]="isPacChecked" [disabled]="isEspeChecked || isAdmChecked">
-      Auto completar Paciente
-    </mat-checkbox>
-    <mat-checkbox class="autoCompletar" [color]="'warn'" (change)="onCheckboxChange($event, 'espe')" [checked]="isEspeChecked" [disabled]="isPacChecked || isAdmChecked">
-      Auto completar Especialista
-    </mat-checkbox>
-    <mat-checkbox class="autoCompletar" [color]="'warn'" (change)="onCheckboxChange($event, 'adm')" [checked]="isAdmChecked" [disabled]="isPacChecked || isEspeChecked">
-      Auto completar Administrador
-    </mat-checkbox>
+      <ng-container *ngFor="let imagen of imagenesEspecialista; let i = index">
+        <div class="profile-container">
+          <button class="profile-button" (click)="autoComplete('espe', i)">
+            <img [src]="imagen" [alt]="'Especialista ' + (i + 1)">
+          </button>
+          <div class="profile-name">{{ especialistas[i].nombre }}</div>
+        </div>
+      </ng-container>
+    
+      <ng-container *ngFor="let imagen of imagenesAdministrador; let i = index">
+        <div class="profile-container">
+          <button class="profile-button" (click)="autoComplete('adm', i)">
+            <img [src]="imagen" alt="Administrador">
+          </button>
+          <div class="profile-name">{{administrador[i].nombre}}</div>
+        </div>
+      </ng-container>
+    </div>
+
   </div>

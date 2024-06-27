@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Firestore, collection, collectionData, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { AlertsService } from './alerts.service';
+import { getDownloadURL, listAll, ref, Storage } from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class UsuarioService {
   private _dataCollection: BehaviorSubject<any[] | null> = new BehaviorSubject<any[] | null>(null);
   dataCollection$ = this._dataCollection.asObservable();
 
-  constructor(private firestore: Firestore, private alertService:AlertsService) { }
+  constructor(private firestore: Firestore, private alertService:AlertsService, private storage: Storage) { }
 
   obtenerCollection(collectionName: string): Observable<any[]> {
     const collectionRef = collection(this.firestore, collectionName);
@@ -90,6 +91,18 @@ export class UsuarioService {
       });
     } catch (error) {
       this.alertService.mostrarAlerta(false, 'No se pudo buscar el documento.', 2000);
+    }
+  }
+
+  async obtenerImagen(rutaImagen: string): Promise<string> {
+    const storageRef = ref(this.storage, rutaImagen);
+  
+    try {
+      const url = await getDownloadURL(storageRef);
+      return url;
+    } catch (error) {
+      console.error('Error al obtener la imagen:', error);
+      throw new Error('No se pudo obtener la imagen.');
     }
   }
 

@@ -47,8 +47,11 @@
         <mat-form-field *ngIf="!(formEspecialista.get('especialidad')?.value === 'otra'); else otraEspecialidadField" class="form-field">
             <mat-label>Especialidad</mat-label>
             <mat-select formControlName="especialidad" #especialidadSelect>
-              <mat-option *ngFor="let item of especialidades" [value]="item.value">
-                {{ item.viewValue }}
+              <mat-option *ngFor="let item of especialidades" [value]="item.nombre">
+                {{ item.nombre }}
+              </mat-option>
+              <mat-option value="otra">
+                Otra especialidad
               </mat-option>
             </mat-select>
           
@@ -66,7 +69,7 @@
               <mat-error *ngIf="formEspecialista.get('otraEspecialidad')?.touched && (formEspecialista.get('otraEspecialidad')?.hasError('required') || formEspecialista.get('otraEspecialidad')?.hasError('pattern')) || formEspecialista.get('otraEspecialidad')?.hasError('maxlength')">
                 <span *ngIf="formEspecialista.get('otraEspecialidad')?.hasError('required')">Especialidad es requerido.</span>
                 <span *ngIf="formEspecialista.get('otraEspecialidad')?.hasError('maxlength')">El nombre de la especialidad no puede superar los 15 caracteres.</span>
-                <span *ngIf="formEspecialista.get('otraEspecialidad')?.hasError('pattern')">Debe contener solo letras, sin espacios.</span>
+                <span *ngIf="formEspecialista.get('otraEspecialidad')?.hasError('pattern')">Debe contener solo letras.</span>
               </mat-error>
           
               <button mat-button (click)="volverASeleccion()">Volver a seleccionar especialidad</button>
@@ -81,7 +84,7 @@
             <input matInput type="email" formControlName="email" required>
             <mat-error *ngIf="formEspecialista.get('email')?.touched && (formEspecialista.get('email')?.hasError('required') || formEspecialista.get('email')?.hasError('email'))">
                 <span *ngIf="formEspecialista.get('email')?.hasError('required')"> Email es requerido.</span>
-                <span *ngIf="formEspecialista.get('email')?.hasError('pattern')">Email no es válido.</span>
+                <span *ngIf="formEspecialista.get('email')?.hasError('email')">Email no es válido.</span>
             </mat-error>
         </mat-form-field>
     </div>
