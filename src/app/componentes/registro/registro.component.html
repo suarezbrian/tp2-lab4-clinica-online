@@ -1,29 +1,28 @@
+<app-spinner *ngIf="isLoading"></app-spinner>
+
+<div *ngIf="!isLoading">
 <div class="container mt-5" *ngIf="!esRegistroEspecialista && !esRegistroPaciente">
   <div class="row align-items-center">
-    <div class="col-md-5">
-      <button class="card-button w-100 rounded-card" (click)="registrarPaciente()">
-        <div class="card horizontal-card text-center rounded-card">
-          <div class="card-body d-flex flex-column align-items-center justify-content-center">
-            <i class="material-icons md-48">person_add</i>
-            <h5 class="card-title">Registrar Paciente</h5>
-            <p class="card-text">Formulario para registrar nuevos pacientes.</p>
-          </div>
+    <div class="col-md-5 d-flex flex-column align-items-center">
+      <button class="card-button rounded-card mb-3" (click)="registrarPaciente()">
+        <div class="horizontal-card rounded-card">
+          <img [src]="imagenPaciente" alt="Registrar Paciente" class="card-image">
         </div>
       </button>
+      <h5 class="card-title">Registrar Paciente</h5>
+      <p class="card-text text-center">Formulario para registrar nuevos pacientes.</p>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 d-flex justify-content-center">
       <div class="divider"></div>
     </div>
-    <div class="col-md-5">
-      <button class="card-button w-100 rounded-card" (click)="registrarEspecialista()">
-        <div class="card horizontal-card text-center rounded-card">
-          <div class="card-body d-flex flex-column align-items-center justify-content-center">
-            <i class="material-icons md-48">person_add</i>
-            <h5 class="card-title">Registrar Especialista</h5>
-            <p class="card-text">Formulario para registrar nuevos especialistas.</p>
-          </div>
+    <div class="col-md-5 d-flex flex-column align-items-center">
+      <button class="card-button rounded-card mb-3" (click)="registrarEspecialista()">
+        <div class="horizontal-card rounded-card">
+          <img [src]="imagenEspecialista" alt="Registrar Especialista" class="card-image">
         </div>
       </button>
+      <h5 class="card-title">Registrar Especialista</h5>
+      <p class="card-text text-center">Formulario para registrar nuevos especialistas.</p>
     </div>
   </div>
 </div>
@@ -36,3 +35,4 @@
 
 <app-registro-paciente *ngIf="esRegistroPaciente"></app-registro-paciente>
 <app-registro-especialista *ngIf="esRegistroEspecialista"></app-registro-especialista>
+</div>

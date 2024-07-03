@@ -1,7 +1,4 @@
-<div *ngIf="isLoading" class="loading-container">
-    <div class="spinner"></div>
-    <span class="loading-text">Verificando autenticación, por favor espere unos segundos...</span>
-</div>
+<app-spinner *ngIf="isLoading" ></app-spinner>
 
 <div *ngIf="!isLoading">
     <app-navbar></app-navbar>

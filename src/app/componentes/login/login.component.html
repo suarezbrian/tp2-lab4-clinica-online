@@ -1,67 +1,70 @@
+<app-spinner *ngIf="isLoading"></app-spinner>
+
+<div *ngIf="!isLoading">
 <br>
 <br>
+<mat-card-title>Entrar al sistema</mat-card-title>
+
 <div class="mat-card">
-    <mat-card>
-      <br>
-      <mat-card-title>Entrar al sistema.</mat-card-title>
-      <br>
-      <br>
-      <mat-card-content>
-        <form [formGroup]="formLogin" (ngSubmit)="entrar()" class="form">
-          <div class="form-row">
-            <mat-form-field class="form-field">
-              <mat-label>Correo Electronico</mat-label>
-              <input type="text" matInput formControlName="email" placeholder="mail@example.com">
-              <mat-error *ngIf="formLogin.get('email')?.touched && (formLogin.get('email')?.hasError('required') || formLogin.get('email')?.hasError('email'))">
-                <span *ngIf="formLogin.get('email')?.hasError('required')">Email es requerido.</span>
-                <span *ngIf="formLogin.get('email')?.hasError('email')">Email no es válido.</span>
-              </mat-error>
-            </mat-form-field>
-    
-            <mat-form-field class="form-field">
-              <mat-label>Password</mat-label>
-              <input type="password" matInput formControlName="password">
-              <mat-error *ngIf="formLogin.get('password')?.touched && (formLogin.get('password')?.hasError('required') || formLogin.get('password')?.hasError('minlength'))">
-                <span *ngIf="formLogin.get('password')?.hasError('required')">Contraseña es requerida.</span>
-                <span *ngIf="formLogin.get('password')?.hasError('minlength')">La contraseña es muy corta, min: 5 digitos.</span>
-              </mat-error>
-            </mat-form-field>
-          </div>
-    
-          <div class="button">
-            <button type="submit" mat-button color="primary">Login</button>
-          </div>
-        </form>
-      </mat-card-content>
-    </mat-card>
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="formLogin" (ngSubmit)="entrar()" class="form">
+        <div class="form-row">
+          <mat-form-field class="form-field">
+            <mat-label>Correo Electrónico</mat-label>
+            <mat-icon matPrefix>email</mat-icon>
+            <input type="text" matInput formControlName="email" placeholder="mail@example.com">
+            <mat-error *ngIf="formLogin.get('email')?.touched && (formLogin.get('email')?.hasError('required') || formLogin.get('email')?.hasError('email'))">
+              <span *ngIf="formLogin.get('email')?.hasError('required')">Email es requerido.</span>
+              <span *ngIf="formLogin.get('email')?.hasError('email')">Email no es válido.</span>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="form-field">
+            <mat-label>Contraseña</mat-label>
+            <mat-icon matPrefix>lock</mat-icon>
+            <input type="password" matInput formControlName="password">
+            <mat-error *ngIf="formLogin.get('password')?.touched && (formLogin.get('password')?.hasError('required') || formLogin.get('password')?.hasError('minlength'))">
+              <span *ngIf="formLogin.get('password')?.hasError('required')">Contraseña es requerida.</span>
+              <span *ngIf="formLogin.get('password')?.hasError('minlength')">La contraseña es muy corta, min: 5 digitos.</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-    <div class="quick-access-buttons">
-      <ng-container *ngFor="let imagen of imagenesPaciente; let i = index">
-        <div class="profile-container">
-          <button class="profile-button" (click)="autoComplete('pac', i)">
-            <img [src]="imagen" [alt]="'Paciente ' + (i + 1)">
-          </button>
-          <div class="profile-name">{{ pacientes[i].nombre }}</div>
+        <div class="button">
+          <button type="submit" mat-raised-button color="primary">Login</button>
         </div>
-      </ng-container>
-    
-      <ng-container *ngFor="let imagen of imagenesEspecialista; let i = index">
-        <div class="profile-container">
-          <button class="profile-button" (click)="autoComplete('espe', i)">
-            <img [src]="imagen" [alt]="'Especialista ' + (i + 1)">
-          </button>
-          <div class="profile-name">{{ especialistas[i].nombre }}</div>
-        </div>
-      </ng-container>
-    
-      <ng-container *ngFor="let imagen of imagenesAdministrador; let i = index">
-        <div class="profile-container">
-          <button class="profile-button" (click)="autoComplete('adm', i)">
-            <img [src]="imagen" alt="Administrador">
-          </button>
-          <div class="profile-name">{{administrador[i].nombre}}</div>
-        </div>
-      </ng-container>
-    </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
 
+  <div class="quick-access-buttons">
+    <ng-container *ngFor="let imagen of imagenesPaciente; let i = index">
+      <div class="profile-container">
+        <button class="profile-button" (click)="autoComplete('pac', i)">
+          <img [src]="imagen" [alt]="'Paciente ' + (i + 1)">
+        </button>
+        <div class="profile-name">{{ pacientes[i].nombre }}</div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngFor="let imagen of imagenesEspecialista; let i = index">
+      <div class="profile-container">
+        <button class="profile-button" (click)="autoComplete('espe', i)">
+          <img [src]="imagen" [alt]="'Especialista ' + (i + 1)">
+        </button>
+        <div class="profile-name">{{ especialistas[i].nombre }}</div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngFor="let imagen of imagenesAdministrador; let i = index">
+      <div class="profile-container">
+        <button class="profile-button" (click)="autoComplete('adm', i)">
+          <img [src]="imagen" alt="Administrador">
+        </button>
+        <div class="profile-name">{{ administrador[i].nombre }}</div>
+      </div>
+    </ng-container>
   </div>
+</div>
+
+</div>

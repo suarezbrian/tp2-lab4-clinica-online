@@ -1,63 +1,91 @@
-<form [formGroup]="formTurno" class="form">
-    <strong style="text-align: start;">Solicitar Turno</strong>
-    <br>
-    <div class="row">
-      <div class="form-control-group col-5">
-        <label class="form-label" for="especialidad">Especialidad</label>
-        <select formControlName="especialidad" class="form-control" id="especialidad">
-          <option *ngFor="let especialidad of especialidades" [value]="especialidad.nombre">{{ especialidad.nombre }}</option>
-        </select>
-        <ng-container *ngIf="formTurno.get('especialidad')?.touched && (formTurno.get('especialidad')?.hasError('required'))">
-            <small class="text-danger" *ngIf="formTurno.get('especialidad')?.hasError('required')"> Especialidad es requerido.</small>
-        </ng-container>
-        <div class="invalid-feedback" *ngIf="formTurno.get('especialidad')?.invalid && formTurno.get('especialidad')?.touched">
-          Debes seleccionar una especialidad.
-        </div>
-      </div>
-  
-      <div class="form-control-group col-5">
-        <label class="form-label" for="especialista">Especialista</label>
-        <select formControlName="especialista" class="form-control" id="especialista">
-          <option *ngFor="let especialista of especialistas" [value]="especialista.nombre">{{ especialista.nombre }}</option>
-        </select>
-        <ng-container *ngIf="formTurno.get('especialista')?.touched && (formTurno.get('especialista')?.hasError('required'))">
-            <small class="text-danger" *ngIf="formTurno.get('especialista')?.hasError('required')">Especialidad es requerido.</small>
-        </ng-container>
-      </div>
-    </div>
-  
-    <div class="row">
-        <div class="form-control-group col-5">
-          <label class="form-label" for="hora">Hora</label>
-          <select formControlName="hora" class="form-control" id="hora">
-            <option *ngFor="let hora of horasDisponibles" [value]="hora">{{ hora }}</option>
-          </select>
-          <ng-container *ngIf="formTurno.get('hora')?.touched && formTurno.get('hora')?.hasError('required')">
-            <small class="text-danger">Hora es requerida.</small>
-          </ng-container>
-        </div>
-    
-        <div class="form-control-group col-5">
-          <label class="form-label" for="fecha">Fecha</label>
-          <select formControlName="fecha" class="form-control" id="fecha">
-            <option *ngFor="let fecha of fechasDisponibles" [value]="fecha">{{ fecha | date: 'dd/MM/yyyy' }}</option>
-          </select>
-          <ng-container *ngIf="formTurno.get('fecha')?.touched && formTurno.get('fecha')?.hasError('required')">
-            <small class="text-danger">Fecha es requerida.</small>
-          </ng-container>
-    </div>
+<app-spinner *ngIf="isLoading"></app-spinner>
 
-  
-    <div class="form-control-group col-5">
-        <label class="form-label" for="especialista">Paciente</label>
-        <select formControlName="paciente" class="form-control" id="paciente">
-          <option *ngFor="let paciente of pacientes" [value]="paciente.nombre">{{ paciente.nombre }}</option>
-        </select>
-        <ng-container *ngIf="formTurno.get('paciente')?.touched && (formTurno.get('paciente')?.hasError('required'))">
-            <small class="text-danger" *ngIf="formTurno.get('paciente')?.hasError('required')">Especialidad es requerido.</small>
-        </ng-container>
-      </div>
+<div *ngIf="!isLoading" class="solicitar-turno-container">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title text-center mb-4">Sacar Turno Online</h5>
+      <mat-horizontal-stepper [linear]="true" #stepper label="Sacar Turnos">
+
+        <!-- Step 1: Seleccionar Especialidad -->
+        <mat-step [stepControl]="especialidadForm">
+          <form [formGroup]="especialidadForm">
+            <ng-template matStepLabel>Seleccionar Especialidad</ng-template>
+            <div class="especialidades-container">
+              <div class="especialidad-item" *ngFor="let especialidad of especialidades">
+                <button mat-icon-button 
+                        [style.backgroundImage]="'url(' + (especialidad.rutaIcono || defaultImage) + ')'"
+                        [class.selected]="especialidadSeleccionada === especialidad"
+                        (click)="selectEspecialidad(especialidad)">
+                  <span>{{ especialidad.nombre }}</span>
+                </button>
+              </div>
+            </div>
+            <div>
+              <button mat-button matStepperNext>Siguiente</button>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- Step 2: Seleccionar Especialista -->
+        <mat-step [stepControl]="especialistaForm">
+          <form [formGroup]="especialistaForm">
+            <ng-template matStepLabel>Seleccionar Especialista</ng-template>
+            <div class="especialistas-container">
+              <button *ngFor="let especialista of especialistas"
+                      mat-icon-button
+                      [style.backgroundImage]="'url(' + especialista.rutaArchivoUno + ')'"
+                      [class.selected]="especialistaSeleccionado === especialista"
+                      (click)="selectEspecialista(especialista)">
+                <span>{{ especialista.nombre }}</span>
+              </button>
+            </div>
+            <div>
+              <button mat-button matStepperPrevious>Anterior</button>
+              <button mat-button matStepperNext>Siguiente</button>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- Step 3: Seleccionar Día -->
+        <mat-step [stepControl]="diaForm">
+          <form [formGroup]="diaForm">
+            <ng-template matStepLabel>Seleccionar Día</ng-template>
+            <div class="dias-container">
+              <button *ngFor="let dia of diasDisponibles" 
+                      mat-raised-button 
+                      [class.selected]="diaSeleccionado === dia" 
+                      (click)="selectDia(dia)">
+                {{ formatDateToDayMonth(dia) }}
+              </button>
+            </div>
+            <div>
+              <button mat-button matStepperPrevious>Anterior</button>
+              <button mat-button matStepperNext>Siguiente</button>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- Step 4: Seleccionar Horario -->
+        <mat-step [stepControl]="horarioForm">
+          <form [formGroup]="horarioForm">
+            <ng-template matStepLabel>Seleccionar Horario</ng-template>
+            <div class="horarios-container">
+              <button *ngFor="let horario of horariosDisponibles" 
+                      mat-raised-button 
+                      [class.selected]="horarioSeleccionado === horario" 
+                      (click)="selectHorario(horario)">
+                {{ horario }}
+              </button>
+            </div>
+            
+            <div>
+              <button mat-button matStepperPrevious>Anterior</button>
+              <button mat-button (click)="submit()">Confirmar Turno</button>
+            </div>
+          </form>
+        </mat-step>
+   
+      </mat-horizontal-stepper>
     </div>
-  
-    <button type="submit" class="btn btn-primary">Solicitar Turno</button>
-  </form>
+  </div>
+</div>

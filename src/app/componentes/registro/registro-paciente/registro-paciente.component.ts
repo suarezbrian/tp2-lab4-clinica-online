@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -18,7 +18,13 @@ import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 @Component({
   selector: 'app-registro-paciente',
   standalone: true,
-  imports: [RecaptchaModule, RecaptchaFormsModule, MatSelectModule, MatTabsModule, MatCheckboxModule, MatDividerModule, MatTableModule, MatButtonModule, MatIconModule, CommonModule, MatGridListModule, MatInputModule, MatFormFieldModule,  FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [RecaptchaModule, RecaptchaFormsModule, 
+    MatSelectModule, MatTabsModule, 
+    MatCheckboxModule, MatDividerModule, 
+    MatTableModule, MatButtonModule, MatIconModule, 
+    CommonModule, MatGridListModule, MatInputModule, 
+    MatFormFieldModule,  FormsModule, ReactiveFormsModule, 
+    CommonModule],
   templateUrl: './registro-paciente.component.html',
   styleUrl: './registro-paciente.component.css'
 })
@@ -39,11 +45,13 @@ export class RegistroPacienteComponent {
       dni: new FormControl("", [Validators.required, Validators.minLength(8), Validators.pattern('^[0-9]+$')]),
       obraSocial: new FormControl("", [Validators.required, Validators.maxLength(25), Validators.pattern('^[a-zA-Z ]+$')]),
       imagenUno: new FormControl("", [Validators.required]),
-      imagenDos: new FormControl("", [Validators.required])
+      imagenDos: new FormControl("", [Validators.required]),
+      recaptchaReactive: new FormControl(null, Validators.required),
     });
-  }
+  }  
 
   registrarPaciente(){
+    
     if (this.formPaciente.valid) { 
             
         const paciente: Paciente = {

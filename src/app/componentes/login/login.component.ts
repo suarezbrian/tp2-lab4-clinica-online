@@ -9,11 +9,13 @@ import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox
 import { SharedServiceService } from '../../services/shared-service.service';
 import { UsuarioService } from '../../services/usuario.service';
 import { Timestamp } from '@angular/fire/firestore';
+import { SpinnerComponent } from '../spinner/spinner.component';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [MatCheckboxModule, CommonModule, MatInputModule, MatButtonModule,MatCardModule, ReactiveFormsModule],
+  imports: [MatCheckboxModule, CommonModule, MatInputModule, MatButtonModule,MatCardModule, ReactiveFormsModule, SpinnerComponent, MatIcon],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -27,6 +29,7 @@ export class LoginComponent {
   imagenesPaciente: string[] = [];
   imagenesEspecialista: string[] = [];
   imagenesAdministrador: string[] = [];
+  isLoading = true;
 
   constructor(private login: FormBuilder,  private auth: AuthenticatorService, private sharedService: SharedServiceService, private usuarioService: UsuarioService){
     this.formLogin = this.login.group({
@@ -49,12 +52,16 @@ export class LoginComponent {
       this.guardarImagenes(this.pacientes, this.imagenesPaciente);
       this.guardarImagenes(this.especialistas, this.imagenesEspecialista);
       this.guardarImagenes(this.administrador, this.imagenesAdministrador);
+
+     
     })
     .catch((error) => {
       console.error('Error al buscar usuarios:', error);
-    });
+    }).finally(() => {
+      this.isLoading = false; 
+    });;
 
-
+    
   }
 
   async guardarImagenes(usuarios: any[], arregloImagenes: string[]) {

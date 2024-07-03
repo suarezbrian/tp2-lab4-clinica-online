@@ -44,6 +44,12 @@ export const routes: Routes = [
         loadComponent:()=> import('./componentes/turno/solicitar-turno/solicitar-turno.component').then(c => c.SolicitarTurnoComponent),
         canActivate: [authGuard],
         data: { rolesPermitidos: [Rol.Paciente,Rol.Administrador] }
+    },
+    {
+        path: 'mi-perfil',
+        loadComponent:()=> import('./componentes/perfil/perfil.component').then(c => c.PerfilComponent),
+        canActivate: [authGuard],
+        data: { rolesPermitidos: [Rol.Paciente,Rol.Administrador, Rol.Especialista] }
     }
 
 

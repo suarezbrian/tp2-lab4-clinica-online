@@ -1,0 +1,74 @@
+<br>
+<br>
+<div class="card">
+    <h5 class="card-title">Especialista</h5>
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img [src]="primeraImagen" class="d-block w-100" alt="Imagen 1">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5>{{ datosEspecialista.apellido }}, {{ datosEspecialista.nombre }}</h5>
+          <p class="card-text">DNI: {{ datosEspecialista.dni }}</p>
+          <p class="card-text">Edad: {{ datosEspecialista.edad }}</p>
+          <p class="card-text">Email: {{ datosEspecialista.email }}</p>
+          <p class="card-text">Especialidad: {{ datosEspecialista.especialidad }}</p>
+          <p class="card-text">Fecha de Registro: {{ datosEspecialista.fecha_registro }}</p>
+
+          <div class="availability-section">
+            <h6>Marcar su disponibilidad horaria</h6>
+            <form>
+              <div class="row mb-3">
+                <label for="startDay" class="col-sm-4 col-form-label">Día de inicio:</label>
+                <div class="col-sm-8">
+                  <select class="form-select" id="startDay" [(ngModel)]="disponibilidad.diaInicio" name="startDay">
+                    <option value="Lunes">Lunes</option>
+                    <option value="Martes">Martes</option>
+                    <option value="Miércoles">Miércoles</option>
+                    <option value="Jueves">Jueves</option>
+                    <option value="Viernes">Viernes</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="endDay" class="col-sm-4 col-form-label">Día de fin:</label>
+                <div class="col-sm-8">
+                  <select class="form-select" id="endDay" [(ngModel)]="disponibilidad.diaFin" name="endDay">
+                    <option value="Lunes">Lunes</option>
+                    <option value="Martes">Martes</option>
+                    <option value="Miércoles">Miércoles</option>
+                    <option value="Jueves">Jueves</option>
+                    <option value="Viernes">Viernes</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="startTime" class="col-sm-4 col-form-label">Hora de inicio:</label>
+                <div class="col-sm-8">
+                  <input type="time" class="form-control" id="startTime" [(ngModel)]="disponibilidad.horaInicio" name="startTime" min="08:00" max="22:00">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="endTime" class="col-sm-4 col-form-label">Hora de fin:</label>
+                <div class="col-sm-8">
+                  <input type="time" class="form-control" id="endTime" [(ngModel)]="disponibilidad.horaFin" name="endTime" min="08:00" max="22:00">
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" (click)="guardarDisponibilidadHoraria()">Guardar Disponibilidad</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div *ngIf="mostrarDisponibilidad" class="card mt-3">
+    <h5 class="card-title">Disponibilidad horaria actual del especialista</h5>
+    <div class="card-body">
+        <p class="card-text"><i class="material-icons">today</i> De {{ datosEspecialista.disponibilidadHoraria.diaInicio !== "" ? datosEspecialista.disponibilidadHoraria.diaInicio: datosCargados.disponibilidadHoraria.diaInicio }} hasta {{ datosEspecialista.disponibilidadHoraria.diaFin !== "" ? datosEspecialista.disponibilidadHoraria.diaFin: datosCargados.disponibilidadHoraria.diaFin }}</p>
+        <p class="card-text"><i class="material-icons">access_time</i> En los horarios de {{ datosEspecialista.disponibilidadHoraria.horaInicio !== "" ? datosEspecialista.disponibilidadHoraria.horainicio: datosCargados.disponibilidadHoraria.horaInicio }} hasta {{ datosEspecialista.disponibilidadHoraria.horaFin !== "" ? datosEspecialista.disponibilidadHoraria.horaFin: datosCargados.disponibilidadHoraria.horaFin }}</p>
+    </div>
+</div>
+
+<br>
+<br>

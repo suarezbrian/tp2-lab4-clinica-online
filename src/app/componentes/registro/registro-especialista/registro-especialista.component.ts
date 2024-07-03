@@ -15,11 +15,12 @@ import { Especialista } from '../../../interfaces/especialista';
 import { AuthenticatorService } from '../../../services/authenticator.service';
 import { EspecialidadService } from '../../../services/especialidad.service';
 import { UsuarioService } from '../../../services/usuario.service';
+import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-registro-especialista',
   standalone: true,
-  imports: [MatSelectModule, MatTabsModule, MatCheckboxModule, MatDividerModule, MatTableModule, MatButtonModule, MatIconModule, CommonModule, MatGridListModule, MatInputModule, MatFormFieldModule,  FormsModule, ReactiveFormsModule],
+  imports: [RecaptchaFormsModule ,RecaptchaModule ,MatSelectModule, MatTabsModule, MatCheckboxModule, MatDividerModule, MatTableModule, MatButtonModule, MatIconModule, CommonModule, MatGridListModule, MatInputModule, MatFormFieldModule,  FormsModule, ReactiveFormsModule],
   templateUrl: './registro-especialista.component.html',
   styleUrl: './registro-especialista.component.css'
 })
@@ -39,16 +40,17 @@ export class RegistroEspecialistaComponent {
       edad: new FormControl("", [Validators.required, Validators.min(1)]),
       apellido: new FormControl("", [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z ]+$')]),
       dni: new FormControl("", [Validators.required, Validators.minLength(8), Validators.pattern('^[0-9]+$')]),
-      especialidad: new FormControl("", [Validators.required]),
+      especialidad: new FormControl(""),
       otraEspecialidad: new FormControl("", [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]),
-      imagenUno: new FormControl("", [Validators.required])
+      imagenUno: new FormControl("", [Validators.required]),
+      //recaptchaReactive: new FormControl(null, Validators.required)
     });
   }
 
   ngOnInit(){
     this.datos.obtenerCollection('especialidad').subscribe({
       next: (data: any[]) => {   
-        this.especialidades = data;        
+        this.especialidades = data;  
       },
       error: (error) => {
         console.error('Error al obtener usuarios:', error);
@@ -56,7 +58,14 @@ export class RegistroEspecialistaComponent {
     });  
   }
 
-  registrarEspecialista(){
+  registrarEspecialista(){ 
+    
+    if(this.formEspecialista.get('otraEspecialidad')?.value !== ""){     
+      //this.especialidad.guardarEspecialidad(this.formEspecialista.get('otraEspecialidad')?.value);
+    }else{      
+      this.formEspecialista.patchValue({ otraEspecialidad: 'No seleccionado' });
+    }
+        
     if (this.formEspecialista.valid) {          
         const especialista: Especialista = {
         nombre: this.formEspecialista.get('nombre')?.value,
@@ -68,16 +77,14 @@ export class RegistroEspecialistaComponent {
         rol: 2,
         password: this.formEspecialista.get('password')?.value,
         especialidad: this.formEspecialista.get('especialidad')?.value, 
-        imagenUno: this.formEspecialista.get('imagenUno')?.value
+        imagenUno: this.formEspecialista.get('imagenUno')?.value       
       }
 
-      if(this.formEspecialista.get('otraEspecialidad')?.value !== undefined){
-        this.especialidad.guardarEspecialidad(this.formEspecialista.get('otraEspecialidad')?.value);
-      }
-
+      this.auth.registro(especialista, 'espe');
       this.formEspecialista.reset();
       this.imagenUno.reset();
-      this.auth.registro(especialista, 'espe');
+      console.log("entro aqui");
+      
       
     }else{
       Object.values(this.formEspecialista.controls).forEach(control => {
@@ -104,7 +111,6 @@ export class RegistroEspecialistaComponent {
         edad: "24",
         apellido: "Charli",
         dni: "30251756",
-        especialidad: "A"
       });
     } else {
       this.formEspecialista.reset();

@@ -39,7 +39,13 @@ export class EspecialidadService {
         password: especialistaData.password,
         especialidad: especialistaData.especialidad,
         rutaArchivoUno: filePath,
-        validarEstado: false
+        validarEstado: false,
+        disponibilidadHoraria: {
+          diaInicia: "",
+          diaFin: "",
+          horaInicio: "",
+          horaFin: ""
+        }
       };
 
       const especialistaCollection = collection(this.firestore, 'usuarios');

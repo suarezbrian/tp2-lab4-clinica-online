@@ -25,7 +25,6 @@ export class TurnoComponent {
     this.sharedService.estadoCompartido$.subscribe(estado => {
       this.estaLogeado = estado.estaLogeado;
       this.usuarioLogeado = estado.usuarioLogeado;
-      console.log(this.usuarioLogeado?.rol);
     });
   } 
 
