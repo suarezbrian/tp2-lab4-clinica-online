@@ -20,12 +20,38 @@ export class MisTurnosEspecialistaComponent {
   turnos: any[] = [];
   estadoTurno = EstadoTurno;
   mostrarComentario: boolean = false;
-  
+  turnosFiltrados: Turno[] = [];
+  filtroEspecialidad: string = '';
+  filtroPaciente: string = '';
+
   constructor(private turnoService: TurnosService, private alertService: AlertsService) {}
 
   async ngOnInit() {
     this.turnos = await this.turnoService.obtenerTurnos(this.datosUsuario.email);
+    this.turnosFiltrados = this.turnos;
+
   }
+
+  filtrarTurnosEspecialidad() {
+    if (this.filtroEspecialidad.trim() === '') {
+      this.turnosFiltrados = this.turnos;
+    } else {
+      this.turnosFiltrados = this.turnos.filter(turno =>
+        turno.especialidad.toLowerCase().startsWith(this.filtroEspecialidad.toLowerCase())
+      );
+    }
+  }  
+    
+  filtrarTurnosPaciente() {
+    if (this.filtroPaciente.trim() === '') {
+      this.turnosFiltrados = this.turnos;
+    } else {
+      this.turnosFiltrados = this.turnos.filter(turno =>
+        turno.paciente.nombre.toLowerCase().startsWith(this.filtroPaciente.toLowerCase())
+      );
+    }
+  }
+
 
   async cancelarTurno(turno: Turno): Promise<void> {
     const comentario = await this.alertService.mostrarAlertaConInput("Motivos por el cual se desea cancelar el turno.", "Escribir los motivos...", "Cancelar Turno.","Turno cancelado con exito.");

@@ -2,12 +2,12 @@
   <h2 class="mb-4">Mis Turnos - Paciente</h2>
 
   <div class="filters mb-4">
-    <input type="text" class="form-control mb-2" placeholder="Filtrar por especialidad" id="filterEspecialidad">
-    <input type="text" class="form-control" placeholder="Filtrar por especialista" id="filterEspecialista">
+    <input type="text" class="form-control mb-2" placeholder="Filtrar por especialidad" [(ngModel)]="filtroEspecialidad" (ngModelChange)="filtrarTurnosEspecialidad()">
+    <input type="text" class="form-control" placeholder="Filtrar por especialista" [(ngModel)]="filtroEspecialista" (ngModelChange)="filtrarTurnosEspecialista()">
   </div>
 
   <div class="list-group">
-    <div *ngFor="let turno of turnos" class="list-group-item turn-card">
+    <div *ngFor="let turno of turnosFiltrados" class="list-group-item turn-card">
       <div class="d-flex justify-content-between align-items-center">
         <div>
           <h5>Especialidad: {{ turno.especialidad }}</h5>
@@ -57,7 +57,7 @@
   </div>
 </div>
 
-
+<!-- Modal para calificar atención -->
 <div class="modal" tabindex="-1" role="dialog" *ngIf="mostrarCalificacion">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -89,7 +89,7 @@
   </div>
 </div>
 
-
+<!-- Modal para encuesta de satisfacción -->
 <div class="modal" tabindex="-1" role="dialog" *ngIf="mostrarEncuesta">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -129,6 +129,7 @@
           <input class="form-check-input" type="radio" name="respuesta3" id="respuesta3No" [(ngModel)]="respuesta3" [value]="false">
           <label class="form-check-label" for="respuesta3No">No</label>
         </div>
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="cerrarEncuesta()">Cerrar</button>

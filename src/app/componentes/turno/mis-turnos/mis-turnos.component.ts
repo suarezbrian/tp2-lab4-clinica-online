@@ -28,12 +28,35 @@ export class MisTurnosComponent {
   respuesta1: boolean | null = null; 
   respuesta2: boolean | null = null;
   respuesta3: boolean | null = null;
-
+  turnosFiltrados: Turno[] = [];
+  filtroEspecialidad: string = '';
+  filtroEspecialista: string = '';
 
   constructor(private turnoService: TurnosService, private alertService: AlertsService) {}
 
   async ngOnInit() {
     this.turnos = await this.turnoService.obtenerTurnosPaciente(this.datosUsuario.email);
+    this.turnosFiltrados = this.turnos;
+  }
+
+  filtrarTurnosEspecialidad() {
+    if (this.filtroEspecialidad.trim() === '') {
+      this.turnosFiltrados = this.turnos;
+    } else {
+      this.turnosFiltrados = this.turnos.filter(turno =>
+        turno.especialidad.toLowerCase().startsWith(this.filtroEspecialidad.toLowerCase())
+      );
+    }
+  }  
+    
+  filtrarTurnosEspecialista() {
+    if (this.filtroEspecialista.trim() === '') {
+      this.turnosFiltrados = this.turnos;
+    } else {
+      this.turnosFiltrados = this.turnos.filter(turno =>
+        turno.especialista.nombre.toLowerCase().startsWith(this.filtroEspecialista.toLowerCase())
+      );
+    }
   }
 
   async cancelarTurno(turno: Turno): Promise<void> {
