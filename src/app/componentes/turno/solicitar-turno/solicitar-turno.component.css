@@ -31,6 +31,7 @@
   border: none;
   transition: transform 0.2s ease;
   position: relative;
+  white-space: nowrap;
 }
 
 .especialidad-item button span, .especialistas-container button span {

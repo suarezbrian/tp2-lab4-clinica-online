@@ -70,6 +70,29 @@ export class UsuarioService {
     }
   }
 
+  async buscarVariosDatosPorCampoArray(collectionName: string, campo: string, valor: any): Promise<any[]> {
+    const collectionRef = collection(this.firestore, collectionName);
+  
+    try {
+      const querySnapshot = await getDocs(query(collectionRef, where(campo, 'array-contains', valor)));
+      if (!querySnapshot.empty) {
+        const datos: any[] = [];
+  
+        querySnapshot.forEach((doc) => {
+          datos.push(doc.data());
+        });
+  
+        return datos;
+      } else {
+        console.log(`No se encontraron documentos con ${campo} que contengan ${valor}.`);
+        return [];
+      }
+    } catch (error) {
+      console.error(`Error al buscar documentos por ${campo}:`, error);
+      throw new Error(`No se pudo buscar documentos por ${campo}.`);
+    }
+  }
+
   async actualizarColeccion(nombreColeccion: string, campoBusqueda: string, valorBusqueda: any, camposActualizar: { [key: string]: any }): Promise<void> {
 
     try {

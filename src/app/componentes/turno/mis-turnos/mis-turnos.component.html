@@ -1,31 +1,139 @@
 <div class="container mt-5">
-    <h2 class="mb-4">Mis Turnos - Paciente</h2>
-  
+  <h2 class="mb-4">Mis Turnos - Paciente</h2>
 
-    <div class="filters mb-4">
-      <input type="text" class="form-control mb-2" placeholder="Filtrar por especialidad" id="filterEspecialidad">
-      <input type="text" class="form-control" placeholder="Filtrar por especialista" id="filterEspecialista">
-    </div>
-  
+  <div class="filters mb-4">
+    <input type="text" class="form-control mb-2" placeholder="Filtrar por especialidad" id="filterEspecialidad">
+    <input type="text" class="form-control" placeholder="Filtrar por especialista" id="filterEspecialista">
+  </div>
 
-    <div class="list-group">
-      <div *ngFor="let turno of turnos" class="list-group-item turn-card">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h5>Especialidad: {{ turno.especialidad }}</h5>
-            <p>Especialista: {{ turno.especialista }}</p>
-            <p>Fecha: {{ turno.fecha }}</p>
-            <p>Estado: 
-              <span [ngClass]="{'badge bg-success': turno.estado === 'Confirmado', 'badge bg-warning': turno.estado === 'Pendiente'}">{{ turno.estado }}</span>
-            </p>
-          </div>
-          <div class="btn-group">
-            <button class="btn btn-danger" (click)="cancelarTurno(turno)">Cancelar turno</button>
-            <button class="btn btn-info" (click)="verResena(turno)">Ver reseña</button>
-            <button class="btn btn-warning" (click)="completarEncuesta(turno)">Completar encuesta</button>
-            <button class="btn btn-primary" (click)="calificarAtencion(turno)">Calificar Atención</button>
-          </div>
+  <div class="list-group">
+    <div *ngFor="let turno of turnos" class="list-group-item turn-card">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h5>Especialidad: {{ turno.especialidad }}</h5>
+          <p>Especialista: {{ turno.especialista.nombre }}</p>
+          <p>Fecha: {{ turno.fecha }} - Hora: {{ turno.hora }}</p>
+          <p>Estado: 
+            <span class="badge" [class.bg-success]="turno.estado === estadoTurno.Confirmado"
+                                [class.bg-warning]="turno.estado === estadoTurno.Pendiente"
+                                [class.bg-secondary]="turno.estado === estadoTurno.Cancelado"
+                                [class.bg-info]="turno.estado === estadoTurno.Realizado"
+                                [class.bg-dark]="turno.estado === estadoTurno.Rechazado"
+                                [class.bg-primary]="turno.estado === estadoTurno.Finalizado">
+              {{ turno.estado == estadoTurno.Pendiente ? "Pendiente" : turno.estado == estadoTurno.Confirmado ? "Confirmado" : turno.estado == estadoTurno.Cancelado ? "Cancelado" : turno.estado == estadoTurno.Rechazado ? "Rechazado" : turno.estado == estadoTurno.Realizado ? "Realizado" : "Finalizado" }}
+            </span>
+          </p>
+        </div>
+        <div class="btn-group">
+          <button *ngIf="turno.estado === estadoTurno.Pendiente" class="btn btn-danger" (click)="cancelarTurno(turno)">Cancelar turno</button>
+          <button *ngIf="turno.comentario" class="btn btn-info" (click)="verResena(turno)">Ver reseña</button>
+          <button *ngIf="turno.estado === estadoTurno.Finalizado && !turno.encuestaSatifaccion.encuestaCompletada" class="btn btn-warning" (click)="abrirEncuesta(turno)">Completar encuesta</button>
+          <button *ngIf="turno.estado === estadoTurno.Finalizado && !turno.calificacion.calificacionHecha" class="btn btn-primary" (click)="calificarAtencion(turno)">Calificar Atención</button>
+        </div>
+      </div>
+      
+      <div *ngIf="turno.estado === estadoTurno.Cancelado">
+        <p class="mt-2">Motivo de la cancelación:</p>
+        <textarea class="form-control" [disabled]="true" [(ngModel)]="turno.comentarioCancelar"></textarea>
+      </div>
+      <div *ngIf="turno.comentario && mostrarComentario">
+        <p class="mt-2">Comentario del especialista:</p>
+        <textarea class="form-control" [disabled]="true" [(ngModel)]="turno.comentario"></textarea>
+      </div>
+      <div *ngIf="turno.encuestaSatifaccion.encuestaCompletada">
+        <p class="mt-2">Encuesta Realizada.</p>
+      </div>
+      <div *ngIf="turno.calificacion.calificacionHecha" class="calificacion-container">
+        <p class="mt-2">Comentario del paciente:</p>
+        <textarea class="form-control" [disabled]="true" [(ngModel)]="turno.calificacion.comentario"></textarea>
+        <p class="mt-2">Calificación de la atención:</p>
+        <div class="calificacion-icons d-flex align-items-center">
+          <mat-icon *ngIf="turno.calificacion.estrellas === 1" class="text-warning">sentiment_dissatisfied</mat-icon>
+          <mat-icon *ngIf="turno.calificacion.estrellas === 2" class="text-secondary">sentiment_neutral</mat-icon>
+          <mat-icon *ngIf="turno.calificacion.estrellas === 3" class="text-success">sentiment_satisfied</mat-icon>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+
+<div class="modal" tabindex="-1" role="dialog" *ngIf="mostrarCalificacion">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Califique la experiencia con el especialista</h5>
+        <button type="button" class="close" (click)="cerrarModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex align-items-center mb-3">
+          <mat-icon class="mr-1 cursor-pointer"
+          [class.selected]="rating === 1"
+          (click)="setRating(1)">sentiment_dissatisfied</mat-icon>
+          <mat-icon class="mr-1 cursor-pointer"
+          [class.selected]="rating === 2"
+          (click)="setRating(2)">sentiment_neutral</mat-icon>
+          <mat-icon class="mr-1 cursor-pointer"
+          [class.selected]="rating === 3"
+          (click)="setRating(3)">sentiment_satisfied</mat-icon>
+        </div>
+        <textarea class="form-control" placeholder="Déjanos tu comentario..." [(ngModel)]="comentarioCalificacion"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="guardarCalificacion()">Guardar Calificación</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal" tabindex="-1" role="dialog" *ngIf="mostrarEncuesta">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Encuesta de satisfacción</h5>
+        <button type="button" class="close" (click)="cerrarEncuesta()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás satisfecho con el servicio dado?</p>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="respuesta1" id="respuesta1Si" [(ngModel)]="respuesta1" [value]="true">
+          <label class="form-check-label" for="respuesta1Si">Sí</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="respuesta1" id="respuesta1No" [(ngModel)]="respuesta1" [value]="false">
+          <label class="form-check-label" for="respuesta1No">No</label>
+        </div>
+
+        <p>¿Volverías a utilizar este servicio?</p>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="respuesta2" id="respuesta2Si" [(ngModel)]="respuesta2" [value]="true">
+          <label class="form-check-label" for="respuesta2Si">Sí</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="respuesta2" id="respuesta2No" [(ngModel)]="respuesta2" [value]="false">
+          <label class="form-check-label" for="respuesta2No">No</label>
+        </div>
+
+        <p>¿El turno se realizó en tiempo y forma?</p>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="respuesta3" id="respuesta3Si" [(ngModel)]="respuesta3" [value]="true">
+          <label class="form-check-label" for="respuesta3Si">Sí</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="respuesta3" id="respuesta3No" [(ngModel)]="respuesta3" [value]="false">
+          <label class="form-check-label" for="respuesta3No">No</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrarEncuesta()">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="guardarEncuesta()">Guardar Encuesta</button>
+      </div>
+    </div>
+  </div>
 </div>

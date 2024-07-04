@@ -51,13 +51,20 @@
           <form [formGroup]="diaForm">
             <ng-template matStepLabel>Seleccionar Día</ng-template>
             <div class="dias-container">
-              <button *ngFor="let dia of diasDisponibles" 
-                      mat-raised-button 
-                      [class.selected]="diaSeleccionado === dia" 
-                      (click)="selectDia(dia)">
-                {{ formatDateToDayMonth(dia) }}
-              </button>
+              <!-- Verifica si hay días disponibles o no -->
+              <ng-container *ngIf="diasDisponibles.length > 0">
+                <button *ngFor="let dia of diasDisponibles" 
+                        mat-raised-button 
+                        [class.selected]="diaSeleccionado === dia" 
+                        (click)="selectDia(dia)">
+                  {{ formatDateToDayMonth(dia) }}
+                </button>
+              </ng-container>
+              <ng-container *ngIf="diasDisponibles.length === 0">
+                <strong style="color: white;">Este especialista no tiene horarios disponibles.</strong>
+              </ng-container>
             </div>
+            
             <div>
               <button mat-button matStepperPrevious>Anterior</button>
               <button mat-button matStepperNext>Siguiente</button>

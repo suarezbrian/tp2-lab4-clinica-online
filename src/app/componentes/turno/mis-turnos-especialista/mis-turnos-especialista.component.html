@@ -1,30 +1,61 @@
 <div class="container mt-5">
-    <h2 class="mb-4">Mis Turnos - Especialista</h2>
-  
-    <div class="filters mb-4">
-      <input type="text" class="form-control mb-2" placeholder="Filtrar por especialidad" id="filterEspecialidad">
-      <input type="text" class="form-control" placeholder="Filtrar por paciente" id="filterPaciente">
-    </div>
-  
-    <div class="list-group">
-      <div *ngFor="let turno of turnos" class="list-group-item turn-card">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h5>Especialidad: {{ turno.especialidad }}</h5>
-            <p>Paciente: {{ turno.paciente }}</p>
-            <p>Fecha: {{ turno.fecha }}</p>
-            <p>Estado: 
-              <span [ngClass]="{'badge bg-success': turno.estado === 'Confirmado', 'badge bg-warning': turno.estado === 'Pendiente', 'badge bg-secondary': turno.estado === 'Finalizado'}">{{ turno.estado }}</span>
-            </p>
-          </div>
-          <div class="btn-group">
-            <button *ngIf="turno.estado === 'Pendiente'" class="btn btn-danger" (click)="cancelarTurno(turno)">Cancelar turno</button>
-            <button *ngIf="turno.estado === 'Pendiente'" class="btn btn-secondary" (click)="rechazarTurno(turno)">Rechazar turno</button>
-            <button *ngIf="turno.estado === 'Pendiente'" class="btn btn-success" (click)="aceptarTurno(turno)">Aceptar turno</button>
-            <button *ngIf="turno.estado === 'Confirmado'" class="btn btn-primary" (click)="finalizarTurno(turno)">Finalizar turno</button>
-            <button class="btn btn-info" (click)="verResena(turno)">Ver reseña</button>
-          </div>
+  <h2 class="mb-4">Mis Turnos - Especialista</h2>
+
+  <div class="filters mb-4">
+    <input type="text" class="form-control mb-2" placeholder="Filtrar por especialidad" id="filterEspecialidad">
+    <input type="text" class="form-control" placeholder="Filtrar por paciente" id="filterPaciente">
+  </div>
+
+  <div class="list-group">
+    <div *ngFor="let turno of turnos" class="list-group-item turn-card">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h5>Especialidad: {{ turno.especialidad }}</h5>
+          <p>Paciente: {{ turno.paciente.nombre }}</p>
+          <p>Especialista: {{ turno.especialista.nombre }}</p>
+          <p>Fecha: {{ turno.fecha }} - Hora: {{turno.hora}}</p>
+          <p>Estado: 
+            <span class="badge" [class.bg-success]="turno.estado === estadoTurno.Confirmado"
+                                [class.bg-warning]="turno.estado === estadoTurno.Pendiente"
+                                [class.bg-secondary]="turno.estado === estadoTurno.Cancelado"
+                                [class.bg-info]="turno.estado === estadoTurno.Realizado"
+                                [class.bg-dark]="turno.estado === estadoTurno.Rechazado"
+                                [class.bg-primary]="turno.estado === estadoTurno.Finalizado">
+              {{ turno.estado == estadoTurno.Pendiente ? "Pendiente" : turno.estado == estadoTurno.Confirmado ? "Confirmado" : turno.estado == estadoTurno.Cancelado ? "Cancelado" : turno.estado == estadoTurno.Rechazado ? "Rechazado" : turno.estado == estadoTurno.Realizado ? "Realizado" : "Finalizado" }}
+            </span>
+          </p>
+        </div>
+        <div class="btn-group">
+          <button *ngIf="turno.estado !== estadoTurno.Confirmado && turno.estado !== estadoTurno.Realizado && turno.estado !== estadoTurno.Rechazado && turno.estado !== estadoTurno.Cancelado && turno.estado !== estadoTurno.Finalizado" class="btn btn-danger" (click)="cancelarTurno(turno)">Cancelar turno</button>
+          <button *ngIf="turno.estado !== estadoTurno.Confirmado && turno.estado !== estadoTurno.Realizado && turno.estado !== estadoTurno.Cancelado && turno.estado !== estadoTurno.Rechazado && turno.estado !== estadoTurno.Finalizado" class="btn btn-secondary" (click)="rechazarTurno(turno)">Rechazar turno</button>
+          <button *ngIf="turno.estado !== estadoTurno.Realizado && turno.estado !== estadoTurno.Cancelado && turno.estado !== estadoTurno.Rechazado && turno.estado !== estadoTurno.Confirmado && turno.estado !== estadoTurno.Finalizado" class="btn btn-success" (click)="aceptarTurno(turno)">Aceptar turno</button>
+          <button *ngIf="turno.estado === estadoTurno.Confirmado" class="btn btn-primary" (click)="finalizarTurno(turno)">Finalizar turno</button>
+          <button *ngIf="turno.calificacion.comentario" class="btn btn-info" (click)="verComentario(turno)">Ver Calificación</button>
+        </div>
+      </div>
+
+      <div *ngIf="turno.estado === estadoTurno.Cancelado">
+        <p class="mt-2">Motivo por el cual se canceló</p>
+        <textarea class="form-control" [disabled]="true" [(ngModel)]="turno.comentarioCancelar"></textarea>
+      </div>
+      <div *ngIf="turno.estado === estadoTurno.Rechazado">
+        <p class="mt-2">Motivo por el cual se rechazó</p>
+        <textarea class="form-control" [disabled]="true" [(ngModel)]="turno.comentarioRechazar"></textarea>
+      </div>
+      <div *ngIf="turno.estado === estadoTurno.Finalizado">
+        <p class="mt-2">Comentario del turno finalizado</p>
+        <textarea class="form-control" [disabled]="true" [(ngModel)]="turno.comentario"></textarea>
+      </div>
+      <div *ngIf="turno.calificacion.calificacionHecha && mostrarComentario" class="calificacion-container">
+        <p class="mt-2">Comentario del paciente:</p>
+        <textarea class="form-control" [disabled]="true" [(ngModel)]="turno.calificacion.comentario"></textarea>
+        <p class="mt-2">Calificación de la atención:</p>
+        <div class="calificacion-icons d-flex align-items-center">
+          <mat-icon *ngIf="turno.calificacion.estrellas === 1" class="text-warning">sentiment_dissatisfied</mat-icon>
+          <mat-icon *ngIf="turno.calificacion.estrellas === 2" class="text-secondary">sentiment_neutral</mat-icon>
+          <mat-icon *ngIf="turno.calificacion.estrellas === 3" class="text-success">sentiment_satisfied</mat-icon>
         </div>
       </div>
     </div>
   </div>
+</div>

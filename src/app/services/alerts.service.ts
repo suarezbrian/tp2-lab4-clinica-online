@@ -61,4 +61,24 @@ export class AlertsService {
   mostrarAlerta(tipo: boolean, mensaje: string, duracion:number) {
     this.configuracionAlerta(tipo, mensaje, duracion);
   }
+
+
+  async mostrarAlertaConInput(titulo: string, placeholder: string, label: string, textofinal: string) {
+    const { value: text } = await Swal.fire({
+      input: "textarea",
+      inputLabel: label,
+      inputPlaceholder: placeholder,
+      inputAttributes: {
+        "aria-label": placeholder
+      },
+      showCancelButton: true
+    });
+    
+    if (text) {
+      Swal.fire(textofinal);
+    }
+
+    return text;
+  }
+   
 }

@@ -10,7 +10,7 @@ interface DisponibilidadHoraria {
 export interface Especialista extends Persona {
     
     password: string;
-    especialidad: string;
+    especialidades: [];
     imagenUno?: File; 
     rutaArchivoUno?: string;
     validarEstado?: boolean;

@@ -35,10 +35,10 @@ export class PerfilEspecialistaComponent {
   }
 
   mostrarHorarios(especialista: any){
-    console.log(especialista);
     if(especialista.disponibilidadHoraria.diaInicio !== ""){
       this.mostrarDisponibilidad = true;
     }else{
+      console.log("qqqq");
       this.mostrarDisponibilidad = false;
     }
   }

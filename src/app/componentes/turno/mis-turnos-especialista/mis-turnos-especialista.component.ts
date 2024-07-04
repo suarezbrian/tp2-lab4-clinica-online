@@ -1,51 +1,104 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { TurnosService } from '../../../services/turnos.service';
+import { Turno } from '../../../interfaces/turno';
+import { FormsModule } from '@angular/forms';
+import { AlertsService } from '../../../services/alerts.service';
+import { EstadoTurno } from "../../../interfaces/estado-turno";
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-mis-turnos-especialista',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, MatIcon],
   templateUrl: './mis-turnos-especialista.component.html',
   styleUrl: './mis-turnos-especialista.component.css'
 })
 export class MisTurnosEspecialistaComponent {
-  turnos = [
-    {
-      especialidad: 'Cardiología',
-      paciente: 'Juan Pérez',
-      fecha: '20/06/2024',
-      estado: 'Pendiente'
-    },
-    {
-      especialidad: 'Dermatología',
-      paciente: 'María Gómez',
-      fecha: '25/06/2024',
-      estado: 'Confirmado'
-    },
-   
-  ];
+  @Input() datosUsuario: any;
+
+  turnos: any[] = [];
+  estadoTurno = EstadoTurno;
+  mostrarComentario: boolean = false;
   
-  constructor(){
+  constructor(private turnoService: TurnosService, private alertService: AlertsService) {}
 
+  async ngOnInit() {
+    this.turnos = await this.turnoService.obtenerTurnos(this.datosUsuario.email);
   }
 
-  cancelarTurno(turno: any) {
-    alert('Turno cancelado');
+  async cancelarTurno(turno: Turno): Promise<void> {
+    const comentario = await this.alertService.mostrarAlertaConInput("Motivos por el cual se desea cancelar el turno.", "Escribir los motivos...", "Cancelar Turno.","Turno cancelado con exito.");
+    if (comentario) {
+      const camposActualizar = {
+        estado: EstadoTurno.Cancelado,
+        comentarioCancelar: comentario
+      };
+      try {
+        await this.turnoService.actualizarTurno(turno.especialista.email, turno.fecha, turno.hora, turno.estado, camposActualizar);
+        turno.estado = EstadoTurno.Cancelado;
+        turno.comentarioCancelar = comentario
+      } catch (error) {
+        this.alertService.mostrarAlerta(false, 'Error al cancelar el turno:', 2000);
+      }
+    } else {
+      this.alertService.mostrarAlerta(false, "Debe ingresar un comentario para cancelar el turno.", 2000);
+    }
   }
 
-  rechazarTurno(turno: any) {
-    alert('Turno rechazado');
+  async rechazarTurno(turno: Turno): Promise<void> {
+    const comentario = await this.alertService.mostrarAlertaConInput("Motivos por el cual se desea rechazar el turno.", "Escribir los motivos...", "Rechazar Turno.", "Turno rechazado con exito.");
+
+    if (comentario) {
+      const camposActualizar = {
+        estado: EstadoTurno.Rechazado,
+        comentarioRechazar: comentario
+      };
+      try {
+        await this.turnoService.actualizarTurno(turno.especialista.email, turno.fecha, turno.hora, turno.estado, camposActualizar);
+        turno.estado = EstadoTurno.Rechazado;
+        turno.comentarioRechazar = comentario;
+      } catch (error) {
+        this.alertService.mostrarAlerta(false, 'Error al rechazar el turno:', 2000);
+      }
+    } else {
+      this.alertService.mostrarAlerta(false, "Debe ingresar un comentario para rechazar el turno.", 2000);
+    }
   }
 
-  aceptarTurno(turno: any) {
-    alert('Turno aceptado');
+  async aceptarTurno(turno: Turno): Promise<void> {
+    const camposActualizar = {
+      estado: EstadoTurno.Confirmado
+    };
+    try {
+      await this.turnoService.actualizarTurno(turno.especialista.email, turno.fecha, turno.hora, turno.estado, camposActualizar);
+      turno.estado = EstadoTurno.Confirmado;
+    } catch (error) {
+      this.alertService.mostrarAlerta(false, 'Error al aceptar el turno:', 2000);
+    }
   }
 
-  finalizarTurno(turno: any) {
-    alert('Turno finalizado');
+  async finalizarTurno(turno: Turno): Promise<void> {
+    const comentario = await this.alertService.mostrarAlertaConInput("Comentario para finalizar el turno.", "Escribir los comentarios...", "Finalizar Turno.", "Turno finalizado con exito.");
+
+    if (comentario) {
+      const camposActualizar = {
+        estado: EstadoTurno.Finalizado,
+        comentario: comentario
+      };
+      try {
+        await this.turnoService.actualizarTurno(turno.especialista.email, turno.fecha, turno.hora, turno.estado, camposActualizar);
+        turno.estado = EstadoTurno.Finalizado;
+        turno.comentario = comentario;
+      } catch (error) {
+        this.alertService.mostrarAlerta(false, 'Error al finalizar el turno:', 2000);
+      }
+    } else {
+      this.alertService.mostrarAlerta(false, "Debe ingresar una reseña o comentario para finalizar el turno.", 2000);
+    }
   }
 
-  verResena(turno: any) {
-    alert('Ver reseña');
+  verComentario(turno: Turno): void {
+    this.mostrarComentario == true ? this.mostrarComentario = false: this.mostrarComentario = true;
   }
 }

@@ -40,34 +40,33 @@ export class RegistroEspecialistaComponent {
       edad: new FormControl("", [Validators.required, Validators.min(1)]),
       apellido: new FormControl("", [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z ]+$')]),
       dni: new FormControl("", [Validators.required, Validators.minLength(8), Validators.pattern('^[0-9]+$')]),
-      especialidad: new FormControl(""),
+      especialidades: new FormControl([], Validators.required),
       otraEspecialidad: new FormControl("", [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]),
       imagenUno: new FormControl("", [Validators.required]),
-      //recaptchaReactive: new FormControl(null, Validators.required)
+      recaptchaReactive: new FormControl(null, Validators.required)
     });
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.datos.obtenerCollection('especialidad').subscribe({
-      next: (data: any[]) => {   
-        this.especialidades = data;  
+      next: (data: any[]) => {
+        this.especialidades = data;
       },
       error: (error) => {
-        console.error('Error al obtener usuarios:', error);
+        console.error('Error al obtener especialidades:', error);
       }
-    });  
+    });
   }
 
-  registrarEspecialista(){ 
-    
-    if(this.formEspecialista.get('otraEspecialidad')?.value !== ""){     
-      //this.especialidad.guardarEspecialidad(this.formEspecialista.get('otraEspecialidad')?.value);
-    }else{      
+  registrarEspecialista() {
+    if (this.formEspecialista.get('otraEspecialidad')?.value !== "") {
+      // this.especialidad.guardarEspecialidad(this.formEspecialista.get('otraEspecialidad')?.value);
+    } else {
       this.formEspecialista.patchValue({ otraEspecialidad: 'No seleccionado' });
     }
-        
-    if (this.formEspecialista.valid) {          
-        const especialista: Especialista = {
+
+    if (this.formEspecialista.valid) {
+      const especialista: Especialista = {
         nombre: this.formEspecialista.get('nombre')?.value,
         apellido: this.formEspecialista.get('apellido')?.value,
         edad: this.formEspecialista.get('edad')?.value,
@@ -76,17 +75,14 @@ export class RegistroEspecialistaComponent {
         fecha_registro: new Date(),
         rol: 2,
         password: this.formEspecialista.get('password')?.value,
-        especialidad: this.formEspecialista.get('especialidad')?.value, 
-        imagenUno: this.formEspecialista.get('imagenUno')?.value       
+        especialidades: this.formEspecialista.get('especialidades')?.value,
+        imagenUno: this.formEspecialista.get('imagenUno')?.value
       }
 
       this.auth.registro(especialista, 'espe');
       this.formEspecialista.reset();
       this.imagenUno.reset();
-      console.log("entro aqui");
-      
-      
-    }else{
+    } else {
       Object.values(this.formEspecialista.controls).forEach(control => {
         control.markAsTouched();
       });
@@ -96,9 +92,9 @@ export class RegistroEspecialistaComponent {
   handleFileInputChange(event: Event, controlName: string) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      const file = input.files[0];    
-      this.formEspecialista.get(controlName)?.setValue(file);  
-      this.imagenUno.setValue(file.name);  
+      const file = input.files[0];
+      this.formEspecialista.get(controlName)?.setValue(file);
+      this.imagenUno.setValue(file.name);
     }
   }
 
@@ -119,7 +115,7 @@ export class RegistroEspecialistaComponent {
   }
 
   volverASeleccion() {
-    this.formEspecialista.get('especialidad')?.setValue('');
-  } 
+    this.formEspecialista.get('especialidades')?.setValue([]);
+  }
 
 }

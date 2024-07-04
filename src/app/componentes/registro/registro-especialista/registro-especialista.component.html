@@ -44,38 +44,33 @@
     <div class="form-row">
 
 
-        <mat-form-field *ngIf="!(formEspecialista.get('especialidad')?.value === 'otra'); else otraEspecialidadField" class="form-field">
-            <mat-label>Especialidad</mat-label>
-            <mat-select formControlName="especialidad" #especialidadSelect>
-              <mat-option *ngFor="let item of especialidades" [value]="item.nombre">
+      <mat-form-field class="form-field">
+        <mat-label>Especialidades</mat-label>
+        <mat-select formControlName="especialidades" multiple>
+            <mat-option *ngFor="let item of especialidades" [value]="item.nombre">
                 {{ item.nombre }}
-              </mat-option>
-              <mat-option value="otra">
+            </mat-option>
+            <mat-option value="otra">
                 Otra especialidad
-              </mat-option>
-            </mat-select>
-          
-            <mat-error *ngIf="formEspecialista.get('especialidad')?.touched && formEspecialista.get('especialidad')?.hasError('required')">
-              <span>Especialidad es requerido.</span>
-            </mat-error>
-                          
-          </mat-form-field>
-          
-          
-          <ng-template #otraEspecialidadField>
-            <mat-form-field class="form-field">
-              <mat-label>Otra Especialidad</mat-label>
-              <input matInput formControlName="otraEspecialidad">
-              <mat-error *ngIf="formEspecialista.get('otraEspecialidad')?.touched && (formEspecialista.get('otraEspecialidad')?.hasError('required') || formEspecialista.get('otraEspecialidad')?.hasError('pattern')) || formEspecialista.get('otraEspecialidad')?.hasError('maxlength')">
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formEspecialista.get('especialidades')?.touched && formEspecialista.get('especialidades')?.hasError('required')">
+            <span>Especialidad es requerido.</span>
+        </mat-error>
+    </mat-form-field>
+    
+    <ng-template #otraEspecialidadField>
+        <mat-form-field class="form-field">
+            <mat-label>Otra Especialidad</mat-label>
+            <input matInput formControlName="otraEspecialidad">
+            <mat-error *ngIf="formEspecialista.get('otraEspecialidad')?.touched && (formEspecialista.get('otraEspecialidad')?.hasError('required') || formEspecialista.get('otraEspecialidad')?.hasError('pattern')) || formEspecialista.get('otraEspecialidad')?.hasError('maxlength')">
                 <span *ngIf="formEspecialista.get('otraEspecialidad')?.hasError('required')">Especialidad es requerido.</span>
                 <span *ngIf="formEspecialista.get('otraEspecialidad')?.hasError('maxlength')">El nombre de la especialidad no puede superar los 15 caracteres.</span>
                 <span *ngIf="formEspecialista.get('otraEspecialidad')?.hasError('pattern')">Debe contener solo letras.</span>
-              </mat-error>
-          
-              <button mat-button (click)="volverASeleccion()">Volver a seleccionar especialidad</button>
-              
-            </mat-form-field>
-          </ng-template>
+            </mat-error>
+            <button mat-button (click)="volverASeleccion()">Volver a seleccionar especialidad</button>
+        </mat-form-field>
+    </ng-template>
 
         
 
@@ -114,10 +109,10 @@
             </mat-error>
         </mat-form-field>
     </div>
-    <!--<re-captcha formControlName="recaptchaReactive" siteKey="6Le33AYqAAAAAJhNjVMi_ns1hJ6TpRH9K76gXJIG"></re-captcha>
+    <re-captcha formControlName="recaptchaReactive" siteKey="6Le33AYqAAAAAJhNjVMi_ns1hJ6TpRH9K76gXJIG"></re-captcha>
     <mat-error *ngIf=" formEspecialista.get('recaptchaReactive')?.touched  && formEspecialista.get('recaptchaReactive')?.hasError('required')">
         Por favor verifique el captcha.
-    </mat-error>-->
+    </mat-error>
     <button mat-raised-button color="primary" type="submit">Registrar Especialista</button>
 </form>
 

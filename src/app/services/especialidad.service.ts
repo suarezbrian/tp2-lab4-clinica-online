@@ -37,7 +37,7 @@ export class EspecialidadService {
         fecha_registro: especialistaData.fecha_registro,
         rol: especialistaData.rol,
         password: especialistaData.password,
-        especialidad: especialistaData.especialidad,
+        especialidades: especialistaData.especialidades,
         rutaArchivoUno: filePath,
         validarEstado: false,
         disponibilidadHoraria: {

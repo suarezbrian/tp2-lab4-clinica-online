@@ -33,58 +33,63 @@ export class AuthenticatorService {
   ) { }
 
   async entrar(email: string, password: string) {
-
     this.esLogin = true;
-    this.datos = await this.usuarioService.buscarDatoPorCampo('usuarios', 'email', email);
-    
-    signInWithEmailAndPassword(this.auth, email, password).then((respuesta)=>{
-      if (respuesta.user.email !== null){ 
-
-
-        if (respuesta.user.emailVerified){ 
-          if(this.datos.validarEstado === false){
-            this.alertService.mostrarAlerta(false, 'Especialista no habilitado.', 2000); 
-            return;
-          }
-          this.msjSucces = "Bienvenido, " + this.datos?.nombre;
-          this.alertService.mostrarAlerta(true, this.msjSucces, 1000); 
-          this.sharedService.estaLogeado = true;
-          this.sharedService.usuarioLogeado = this.datos;
-          this.router.navigate(['/bienvenida']);
-        }else{      
-          this.alertService.mostrarAlerta(false, 'Correo no verificado.', 2000); 
+    try {
+      const respuesta = await signInWithEmailAndPassword(this.auth, email, password);
+  
+      if (respuesta.user.emailVerified) {
+        this.datos = await this.usuarioService.buscarDatoPorCampo('usuarios', 'email', email);
+  
+        if (this.datos.validarEstado === false) {
+          this.alertService.mostrarAlerta(false, 'Especialista no habilitado.', 2000);
+          return;
         }
+  
+        this.msjSucces = "Bienvenido, " + this.datos?.nombre;
+        this.alertService.mostrarAlerta(true, this.msjSucces, 1000);
+        this.sharedService.estaLogeado = true;
+        this.sharedService.usuarioLogeado = this.datos;
+        this.router.navigate(['/bienvenida']);
+      } else {
+        await this.auth.signOut(); 
+        this.alertService.mostrarAlerta(false, 'Correo no verificado. Por favor, verifica tu correo electrónico.', 2000);
       }
-    }).catch((e) => {        
-
-      switch (e.code) {
+    } catch (e) {
+      switch (e) {
         case "auth/invalid-credential":
-          this.msjError = "Credenciales invalidas";
+          this.msjError = "Credenciales inválidas";
           break;
         default:
-          this.msjError = "Error, en el login del usuario"
+          this.msjError = "Error en el inicio de sesión del usuario";
           break;
-      } 
-
-      this.alertService.mostrarAlerta(false, this.msjError, 2000);  
-    });
+      }
+      this.alertService.mostrarAlerta(false, this.msjError, 2000);
+    }
   }
+
+
+
 
   registro(data: any, tipo: string) {
     this.esRegistro = true;
     createUserWithEmailAndPassword(this.auth, data.email, data.password).then((respuesta) => {
       if (respuesta.user.email !== null) {
         sendEmailVerification(respuesta.user).then(() => {
-          if(data.otraEspecialidad){
-
-          }
           this.garudarTipoUsuario(data, tipo);
           this.alertService.mostrarAlerta(true, this.msjSucces, 1500);
-          this.alertService.mostrarAlertaModal('Registro Exitoso.','Se ha enviado un correo de verificación a tu dirección de correo electrónico. Por favor revisa tu bandeja de entrada y haz clic en el enlace de verificación para completar tu registro.',          'https://img.freepik.com/vector-premium/sobre-abierto-documento-icono-linea-marca-verificacion-verde-correo-mensaje-confirmacion-oficial-enviado-exito-correo-electronico-verificacion-entrega-correo-electronico-diseno-plano-vector_662353-720.jpg',200, 200, 'Verificación de mail');     
+          this.alertService.mostrarAlertaModal('Registro Exitoso.','Se ha enviado un correo de verificación a tu dirección de correo electrónico. Por favor revisa tu bandeja de entrada y haz clic en el enlace de verificación para completar tu registro.', 'https://img.freepik.com/vector-premium/sobre-abierto-documento-icono-linea-marca-verificacion-verde-correo-mensaje-confirmacion-oficial-enviado-exito-correo-electronico-verificacion-entrega-correo-electronico-diseno-plano-vector_662353-720.jpg',200, 200, 'Verificación de mail');     
           this.salir(this.esRegistro);
         }).catch((e) => {
           this.msjError = "Error al enviar el correo de verificación.";
           this.alertService.mostrarAlerta(false, this.msjError, 2000);
+        }).finally(() => {
+          this.auth.signOut().then(() => {
+            this.sharedService.estaLogeado = false;
+            this.router.navigate(['/bienvenida']);
+          }).catch((error) => {
+            this.msjError = "Error al cerrar sesión después del registro: " + error;
+            this.alertService.mostrarAlerta(false, this.msjError, 2000);
+          });
         });
       }
     }).catch((e) => {

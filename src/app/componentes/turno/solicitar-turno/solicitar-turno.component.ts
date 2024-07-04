@@ -10,6 +10,8 @@ import { TurnosService } from '../../../services/turnos.service';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton } from '@angular/material/button';
+import { EstadoTurno } from "../../../interfaces/estado-turno";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-solicitar-turno',
@@ -39,7 +41,7 @@ export class SolicitarTurnoComponent {
   diaSeleccionado!: Date; 
   horarioSeleccionado!: string; 
 
-  constructor(private fb: FormBuilder, private usuarioService:UsuarioService, private sharedService: SharedServiceService, private turnoService: TurnosService) {
+  constructor(private fb: FormBuilder, private usuarioService:UsuarioService, private sharedService: SharedServiceService, private turnoService: TurnosService, private router: Router) {
     this.especialidadForm = this.fb.group({
       especialidad: ['', Validators.required]
     });    
@@ -65,7 +67,7 @@ export class SolicitarTurnoComponent {
       next: (especialidades: any[]) => {
 
         this.especialidades = especialidades;
-    
+      
         Promise.all(especialidades.map(especialidad => this.obtenerEspecialidadConImagenes(especialidad)))
           .then((resultados) => {
             resultados.forEach((especialidadConImagenes, index) => {
@@ -78,7 +80,6 @@ export class SolicitarTurnoComponent {
                 resultados.forEach((especialistasConImagenes, index) => {
                   this.especialidades[index].especialistas = especialistasConImagenes;
                 });
-                
                 this.especialidades = this.especialidades.filter(especialidad => especialidad.especialistas && especialidad.especialistas.length > 0);
                 console.log('Especialidades con al menos un especialista:', this.especialidades);
               })
@@ -111,7 +112,7 @@ export class SolicitarTurnoComponent {
   
   async obtenerEspecialistasConImagenes(especialidad: any) {
     try {
-      const especialistas = await this.usuarioService.buscarVariosDatosPorCampo('usuarios', 'especialidad', especialidad.nombre);
+      const especialistas = await this.usuarioService.buscarVariosDatosPorCampoArray('usuarios', 'especialidades', especialidad.nombre);
       return await Promise.all(especialistas.map(async (especialista) => {
         especialista.rutaArchivoUno = await this.usuarioService.obtenerImagen(especialista.rutaArchivoUno);
         return especialista;
@@ -152,6 +153,7 @@ export class SolicitarTurnoComponent {
 
   async loadDiasDisponibles(especialista: any) {
     this.turnosNoDisponibles = await this.turnoService.buscarTurnos(especialista.email);
+    console.log("turnos nos",this.turnosNoDisponibles);
     this.diasDisponibles = this.calculateDiasDisponibles(especialista.disponibilidadHoraria);
   }
 
@@ -234,7 +236,6 @@ export class SolicitarTurnoComponent {
   }
   
   formatDate(date: Date): string {
-    console.log(date);
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     return `(${day}/${month})`;
@@ -254,7 +255,7 @@ export class SolicitarTurnoComponent {
     return `(${day}/${month})`;
   }
 
-  submit() {
+  async submit() {
     if (this.horarioForm.valid) {
       this.especialistaForm.value.especialista.rutaArchivoUno = "";
       const turno: Turno = {
@@ -263,13 +264,15 @@ export class SolicitarTurnoComponent {
         paciente: this.pacienteLogeado,
         fecha: this.diaForm.value.formatoDia,
         hora:  this.horarioForm.value.horario,
-        estado: 1, 
+        estado: EstadoTurno.Pendiente, 
+        encuestaSatifaccion: {respueta1: false, respueta2: false, respuesta3:false, encuestaCompletada:false},
         comentario: '',
-        calificacion: { estrellas: 0, comentario: '' }
+        calificacion: { estrellas: 0, comentario: '', calificacionHecha: false }
       };
 
       console.log('Turno confirmado:', turno);
-      this.turnoService.guardarTurno(turno);
+      await this.turnoService.guardarTurno(turno);
+      this.router.navigate(['/bienvenida']);
       
     }
   }
