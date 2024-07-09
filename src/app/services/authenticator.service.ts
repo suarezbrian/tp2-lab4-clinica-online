@@ -85,6 +85,7 @@ export class AuthenticatorService {
         }).finally(() => {
           this.auth.signOut().then(() => {
             this.sharedService.estaLogeado = false;
+            this.salir(this.esRegistro);
             this.router.navigate(['/bienvenida']);
           }).catch((error) => {
             this.msjError = "Error al cerrar sesión después del registro: " + error;

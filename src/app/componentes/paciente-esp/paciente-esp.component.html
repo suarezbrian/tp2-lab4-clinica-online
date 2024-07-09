@@ -1,0 +1,113 @@
+<app-spinner *ngIf="isLoading"></app-spinner>
+
+<div *ngIf="!isLoading">
+
+<div class="container mt-4">
+    <div class="row">
+      <div class="col-md-4">
+        <h3>Pacientes</h3>
+        <div *ngFor="let paciente of pacientes" class="card mb-3 cursor-pointer" (click)="seleccionarPaciente(paciente)">
+          <div class="card-body d-flex align-items-center">
+            <img [src]="paciente.imagen" class="rounded-circle me-3" alt="{{ paciente.nombre }}" width="80" height="80">
+            <div>
+              <h5 class="mb-0">{{ paciente.nombre }}</h5>            
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8" *ngIf="pacienteSeleccionado">
+        <h3 class="mb-4 text-center">Detalles del Paciente</h3>
+        <div class="card mb-3">
+          <div class="card-body text-center">
+            <h5>{{ pacienteSeleccionado.nombre }}</h5>
+            <div class="row mt-4">
+              <div class="col-md-6 text-md-start" style="padding-left: 40px;"> 
+                <p><strong>DNI:</strong> {{ pacienteSeleccionado.dni }}</p>
+                <p><strong>Edad:</strong> {{ pacienteSeleccionado.edad }}</p>
+                <p><strong>Obra Social:</strong> {{ pacienteSeleccionado.obraSocial }}</p>
+                <p><strong>Email:</strong> {{ pacienteSeleccionado.email }}</p>
+              </div>
+              <div class="col-md-6 text-md-start"> 
+                <p><strong>Fecha de Registro:</strong> {{ pacienteSeleccionado.fecha_registro }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h3>Turnos</h3>
+        <div *ngFor="let turno of pacienteSeleccionado.turnos" class="list-group-item turn-card">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h5>Especialidad: {{ turno.especialidad }}</h5>
+              <p>Especialista: {{ turno.especialista.nombre }}</p>
+              <p>Fecha: {{ turno.fecha }} - Hora: {{ turno.hora }}</p>
+              <p>Estado: 
+                <span class="badge" [class.bg-success]="turno.estado === estadoTurno.Confirmado"
+                    [class.bg-warning]="turno.estado === estadoTurno.Pendiente"
+                    [class.bg-secondary]="turno.estado === estadoTurno.Cancelado"
+                    [class.bg-info]="turno.estado === estadoTurno.Realizado"
+                    [class.bg-dark]="turno.estado === estadoTurno.Rechazado"
+                    [class.bg-primary]="turno.estado === estadoTurno.Finalizado">
+                    {{ turno.estado == estadoTurno.Pendiente ? "Pendiente" : turno.estado == estadoTurno.Confirmado ? "Confirmado" : turno.estado == estadoTurno.Cancelado ? "Cancelado" : turno.estado == estadoTurno.Rechazado ? "Rechazado" : turno.estado == estadoTurno.Realizado ? "Realizado" : "Finalizado" }}
+                </span>
+              </p>
+            </div>
+            <button class="btn btn-info" *ngIf="turno.historiaClinicaCargada" (click)="verHistoriaClinica(turno)">Ver Historial Clínico</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal backdrop" tabindex="-1" role="dialog" [ngClass]="{ 'show d-block': mostrarHistoriaClinicaDisable }">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Historia Clínica</h5>
+        </div>
+        <div class="modal-body">
+          <form *ngIf="mostrarHistoriaClinicaDisable" [formGroup]="historiaClinicaForm">
+            <div class="form-group">
+              <label for="altura">Altura</label>
+              <input type="number" class="form-control" id="altura" formControlName="altura" [value]="turnoSeleccionadoHistoria.historiaClinica.altura" [readonly]="true">
+            </div>
+            <div class="form-group">
+              <label for="peso">Peso</label>
+              <input type="number" class="form-control" id="peso" formControlName="peso" [value]="turnoSeleccionadoHistoria.historiaClinica.peso" [readonly]="true">
+            </div>
+            <div class="form-group">
+              <label for="temperatura">Temperatura</label>
+              <input type="number" class="form-control" id="temperatura" formControlName="temperatura" [value]="turnoSeleccionadoHistoria.historiaClinica.temperatura" [readonly]="true">
+            </div>
+            <div class="form-group">
+              <label for="presion">Presión</label>
+              <input type="text" class="form-control" id="presion" formControlName="presion" [value]="turnoSeleccionadoHistoria.historiaClinica.presion" [readonly]="true">
+            </div>
+  
+            <div formArrayName="datosDinamicos" *ngIf="turnoSeleccionadoHistoria.historiaClinica.datosDinamicos.length > 0">
+              <div *ngFor="let campo of turnoSeleccionadoHistoria.historiaClinica.datosDinamicos; let i = index" [formGroupName]="i">
+                <br>
+                <div class="form-group">
+                  <label for="clave">Clave</label>
+                  <input type="text" class="form-control" formControlName="clave" [value]="campo.clave" [readonly]="true">
+                </div>
+                <div class="form-group">
+                  <label for="valor">Valor</label>
+                  <input type="text" class="form-control" formControlName="valor" [value]="campo.valor" [readonly]="true">
+                </div>
+                <br>
+              </div>
+            </div>
+  
+            <br>
+            <br>
+  
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>

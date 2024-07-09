@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Paciente } from '../interfaces/paciente';
-import { Firestore, addDoc, collection, collectionData, getDocs, query, where } from '@angular/fire/firestore';
+import { Firestore, addDoc, arrayUnion, collection, collectionData, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
 import { getStorage, ref, uploadBytesResumable } from '@angular/fire/storage';
+import { AlertsService } from './alerts.service';
+import { HistoriaClinica } from '../interfaces/historia-clinica';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +13,8 @@ export class PacienteService {
   private storage = getStorage();
  
   constructor(
-    private firestore: Firestore
+    private firestore: Firestore,
+    private alertService: AlertsService
   ) { 
      
   }
@@ -53,6 +56,43 @@ export class PacienteService {
     } catch (error) {
       console.error('Error al guardar los datos del paciente:', error);
       throw error;
+    }
+  }
+
+  async agregarHistoriaClinica(
+    nombreColeccion: string,
+    campoBusqueda: string,
+    valorBusqueda: any,
+    nuevaHistoriaClinica: HistoriaClinica
+  ): Promise<void> {
+    try {
+      const coleccion = collection(this.firestore, nombreColeccion);
+      const querySnapshot = await getDocs(query(coleccion, where(campoBusqueda, '==', valorBusqueda)));
+  
+      if (querySnapshot.empty) {
+        console.log(`No se encontró ningún documento con ${campoBusqueda} = ${valorBusqueda}.`);
+        return;
+      }
+  
+      querySnapshot.forEach(async (docSnap) => {
+        try {
+          const docData = docSnap.data();
+          const historiaClinicaExistente = docData['historiaClinica'] || [];
+  
+          const actualizacion = {
+            historiaClinica: arrayUnion(nuevaHistoriaClinica)
+          };
+  
+          await updateDoc(docSnap.ref, actualizacion);
+          this.alertService.mostrarAlerta(true, 'Documento actualizado correctamente.', 2000);
+        } catch (error) {
+          console.error('Error al actualizar el documento:', error);
+          this.alertService.mostrarAlerta(false, 'No se pudo actualizar el documento.', 2000);
+        }
+      });
+    } catch (error) {
+      console.error('Error al buscar el documento:', error);
+      this.alertService.mostrarAlerta(false, 'No se pudo buscar el documento.', 2000);
     }
   }
   

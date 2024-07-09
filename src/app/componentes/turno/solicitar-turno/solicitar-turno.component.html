@@ -4,7 +4,7 @@
   <div class="card">
     <div class="card-body">
       <h5 class="card-title text-center mb-4">Sacar Turno Online</h5>
-      <mat-horizontal-stepper [linear]="true" #stepper label="Sacar Turnos">
+      <mat-horizontal-stepper [linear]="true" #stepper label="Sacar Turnos"  (selectionChange)="onStepChange($event)">
 
         <!-- Step 1: Seleccionar Especialidad -->
         <mat-step [stepControl]="especialidadForm">
@@ -15,13 +15,11 @@
                 <button mat-icon-button 
                         [style.backgroundImage]="'url(' + (especialidad.rutaIcono || defaultImage) + ')'"
                         [class.selected]="especialidadSeleccionada === especialidad"
-                        (click)="selectEspecialidad(especialidad)">
-                  <span>{{ especialidad.nombre }}</span>
+                        (click)="selectEspecialidad(especialidad)" mat-button matStepperNext>
                 </button>
               </div>
             </div>
             <div>
-              <button mat-button matStepperNext>Siguiente</button>
             </div>
           </form>
         </mat-step>
@@ -41,7 +39,6 @@
             </div>
             <div>
               <button mat-button matStepperPrevious>Anterior</button>
-              <button mat-button matStepperNext>Siguiente</button>
             </div>
           </form>
         </mat-step>
@@ -67,7 +64,6 @@
             
             <div>
               <button mat-button matStepperPrevious>Anterior</button>
-              <button mat-button matStepperNext>Siguiente</button>
             </div>
           </form>
         </mat-step>

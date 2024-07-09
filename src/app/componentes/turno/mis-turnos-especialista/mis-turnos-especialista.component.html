@@ -29,8 +29,10 @@
           <button *ngIf="turno.estado !== estadoTurno.Confirmado && turno.estado !== estadoTurno.Realizado && turno.estado !== estadoTurno.Rechazado && turno.estado !== estadoTurno.Cancelado && turno.estado !== estadoTurno.Finalizado" class="btn btn-danger" (click)="cancelarTurno(turno)">Cancelar turno</button>
           <button *ngIf="turno.estado !== estadoTurno.Confirmado && turno.estado !== estadoTurno.Realizado && turno.estado !== estadoTurno.Cancelado && turno.estado !== estadoTurno.Rechazado && turno.estado !== estadoTurno.Finalizado" class="btn btn-secondary" (click)="rechazarTurno(turno)">Rechazar turno</button>
           <button *ngIf="turno.estado !== estadoTurno.Realizado && turno.estado !== estadoTurno.Cancelado && turno.estado !== estadoTurno.Rechazado && turno.estado !== estadoTurno.Confirmado && turno.estado !== estadoTurno.Finalizado" class="btn btn-success" (click)="aceptarTurno(turno)">Aceptar turno</button>
-          <button *ngIf="turno.estado === estadoTurno.Confirmado" class="btn btn-primary" (click)="finalizarTurno(turno)">Finalizar turno</button>
+          <button *ngIf="turno.estado === estadoTurno.Confirmado && turno.historiaClinicaCargada" class="btn btn-primary" (click)="finalizarTurno(turno)">Finalizar turno</button>
+          <button *ngIf="turno.estado === estadoTurno.Confirmado && !turno.historiaClinicaCargada" class="btn btn-primary" (click)="mostrarModalHistoriaClinica(turno)">Tomar turno</button>
           <button *ngIf="turno.calificacion.comentario" class="btn btn-info" (click)="verComentario(turno)">Ver Calificación</button>
+          <button *ngIf="turno.historiaClinicaCargada" class="btn btn-warning" (click)="verHistoriaClinica(turno)">Ver Historia Clinica</button>
         </div>
       </div>
 
@@ -55,6 +57,61 @@
           <mat-icon *ngIf="turno.calificacion.estrellas === 2" class="text-secondary">sentiment_neutral</mat-icon>
           <mat-icon *ngIf="turno.calificacion.estrellas === 3" class="text-success">sentiment_satisfied</mat-icon>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-historia-clinica *ngIf="mostrarHistoriaClinica" [turnoSeleccionado]="turnoSeleccionado"></app-historia-clinica>
+
+
+<div class="modal" tabindex="-1" role="dialog" [ngClass]="{ 'show d-block': mostrarHistoriaClinicaDisable }">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Historia Clínica</h5>
+      </div>
+      <div class="modal-body">
+        <form *ngIf="mostrarHistoriaClinicaDisable" [formGroup]="historiaClinicaForm">
+          <div class="form-group">
+            <label for="altura">Altura</label>
+            <input type="number" class="form-control" id="altura" formControlName="altura" [value]="turnoSeleccionadoHistoria.historiaClinica.altura" [readonly]="true">
+          </div>
+          <div class="form-group">
+            <label for="peso">Peso</label>
+            <input type="number" class="form-control" id="peso" formControlName="peso" [value]="turnoSeleccionadoHistoria.historiaClinica.peso" [readonly]="true">
+          </div>
+          <div class="form-group">
+            <label for="temperatura">Temperatura</label>
+            <input type="number" class="form-control" id="temperatura" formControlName="temperatura" [value]="turnoSeleccionadoHistoria.historiaClinica.temperatura" [readonly]="true">
+          </div>
+          <div class="form-group">
+            <label for="presion">Presión</label>
+            <input type="text" class="form-control" id="presion" formControlName="presion" [value]="turnoSeleccionadoHistoria.historiaClinica.presion" [readonly]="true">
+          </div>
+
+          <div formArrayName="datosDinamicos" *ngIf="turnoSeleccionadoHistoria.historiaClinica.datosDinamicos.length > 0">
+            <div *ngFor="let campo of turnoSeleccionadoHistoria.historiaClinica.datosDinamicos; let i = index" [formGroupName]="i">
+              <br>
+              <div class="form-group">
+                <label for="clave">Clave</label>
+                <input type="text" class="form-control" formControlName="clave" [value]="campo.clave" [readonly]="true">
+              </div>
+              <div class="form-group">
+                <label for="valor">Valor</label>
+                <input type="text" class="form-control" formControlName="valor" [value]="campo.valor" [readonly]="true">
+              </div>
+              <br>
+            </div>
+          </div>
+
+          <br>
+          <br>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cerrar</button>
       </div>
     </div>
   </div>

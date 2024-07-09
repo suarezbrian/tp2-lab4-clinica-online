@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import {MatStepperModule} from '@angular/material/stepper';
+import {MatStepper, MatStepperModule} from '@angular/material/stepper';
 import { UsuarioService } from '../../../services/usuario.service';
 import { SharedServiceService } from '../../../services/shared-service.service';
 import { Turno } from '../../../interfaces/turno';
@@ -21,7 +21,7 @@ import { Router } from '@angular/router';
   styleUrl: './solicitar-turno.component.css'
 })
 export class SolicitarTurnoComponent {
-
+  @ViewChild('stepper') private stepper!: MatStepper;
  
   especialidadForm!: FormGroup;
   especialistaForm!: FormGroup;
@@ -35,7 +35,7 @@ export class SolicitarTurnoComponent {
   especialidades: any[]=[];
   isLoading = true;
   turnosNoDisponibles: any[]=[];
-  defaultImage = 'assets/default.png';
+  defaultImage = 'https://i.ibb.co/gTNF83N/f1d0807f8ffad0197757d840bdc97d0b-icono-de-registro-medico.webp';
   especialistaSeleccionado: any; 
   especialidadSeleccionada: any; 
   diaSeleccionado!: Date; 
@@ -127,12 +127,14 @@ export class SolicitarTurnoComponent {
     this.especialidadSeleccionada = especialidad;
     this.especialidadForm.patchValue({ especialidad: especialidad.nombre });
     this.loadEspecialistas(especialidad);
+    this.stepper.next();
   }
 
-  selectEspecialista(especialista: any) {
+  async selectEspecialista(especialista: any) {
     this.especialistaSeleccionado = especialista;
     this.especialistaForm.patchValue({ especialista: especialista });
-    this.loadDiasDisponibles(especialista);
+    await this.loadDiasDisponibles(especialista);
+    this.stepper.next();
   }
 
   selectDia(dia: Date) {
@@ -140,11 +142,13 @@ export class SolicitarTurnoComponent {
     const formatoDia = this.formatDateToDayMonth(dia);
     this.diaForm.patchValue({ formatoDia });  
     this.loadHorariosDisponibles();
+    this.stepper.next();
   }
 
   selectHorario(horario: string) {
     this.horarioSeleccionado = horario;
     this.horarioForm.patchValue({ horario });
+    this.stepper.next();
   }
 
   loadEspecialistas(especialidad: any) {
@@ -267,13 +271,36 @@ export class SolicitarTurnoComponent {
         estado: EstadoTurno.Pendiente, 
         encuestaSatifaccion: {respueta1: false, respueta2: false, respuesta3:false, encuestaCompletada:false},
         comentario: '',
-        calificacion: { estrellas: 0, comentario: '', calificacionHecha: false }
+        calificacion: { estrellas: 0, comentario: '', calificacionHecha: false },
       };
 
       console.log('Turno confirmado:', turno);
       await this.turnoService.guardarTurno(turno);
       this.router.navigate(['/bienvenida']);
       
+    }
+  }
+
+  onStepChange(event: any) {
+    if (event.previouslySelectedIndex > event.selectedIndex) {
+      this.resetFormsAndSelections(event.selectedIndex);
+    }
+  }
+
+  resetFormsAndSelections(stepIndex: number) {
+    switch (stepIndex) {
+      case 0:
+        this.especialidadForm.reset();
+        break;
+      case 1:
+        this.especialistaForm.reset();
+        break;
+      case 2:
+        this.diaForm.reset();
+        break;
+      case 3:
+        this.horarioForm.reset();
+        break;
     }
   }
 

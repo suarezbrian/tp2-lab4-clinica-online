@@ -41,4 +41,22 @@ export class SharedServiceService {
     return this.estadoCompartido.usuarioLogeado;
   }
 
+  private _mostrarHistoriaClinica: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  mostrarHistoriaClinica$ = this._mostrarHistoriaClinica.asObservable();
+
+  get mostrarHistoriaClinica(): boolean {
+    return this._mostrarHistoriaClinica.getValue();
+  }
+
+  set mostrarHistoriaClinica(valor: boolean) {
+    this._mostrarHistoriaClinica.next(valor);
+  }
+
+  private cargarTurnosSubject = new BehaviorSubject<boolean>(false);
+  cargarTurnos$ = this.cargarTurnosSubject.asObservable();
+
+  triggerCargarTurnos() {
+    this.cargarTurnosSubject.next(true);
+  }
+
 }

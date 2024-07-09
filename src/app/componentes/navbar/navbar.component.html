@@ -1,21 +1,39 @@
-<mat-toolbar  class="navbar">
-    <mat-toolbar-row>
+<mat-toolbar class="navbar">
+  <mat-toolbar-row>
+    <span class="btnHome" routerLink="/bienvenida">
+      <mat-icon>favorite</mat-icon> Clínica Online
+    </span>
+    <span class="example-spacer"></span>
 
-      <span class="btnHome" routerLink="/bienvenida"><mat-icon>favorite</mat-icon>  Clínica Online</span>
-      <span class="example-spacer"></span>     
-      
-      <button *ngIf="!estaLogeado" color="primary" mat-button [matMenuTriggerFor]="menu"><mat-icon>view_headline</mat-icon>Entrar al sistema</button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="/login"><mat-icon>login</mat-icon>Entrar</button>
-        <button mat-menu-item routerLink="/registro"><mat-icon>person_add</mat-icon>Registarse</button>
-      </mat-menu>
-   
-      <button *ngIf="estaLogeado" color="primary" mat-button [matMenuTriggerFor]="menuLogeado"><mat-icon>view_headline</mat-icon>{{usuarioLogeado.nombre}}</button>
-      <mat-menu #menuLogeado="matMenu">
-        <button mat-menu-item routerLink="/bienvenida"><mat-icon>supervisor_account</mat-icon>Mi Perfil</button>
-        <button *ngIf="estaLogeado && usuarioLogeado.rol == 1" mat-button color="accent" routerLink="/panel-administrador"><mat-icon>mode_edit</mat-icon>Panel Administrador</button>
-        <button matTooltip="Cerrar Sesión" *ngIf="estaLogeado" color="primary" mat-button (click)="cerrarSesion()">Cerrar Sesión<mat-icon>logout</mat-icon></button>
-      </mat-menu>
+    <button *ngIf="estaLogeado  && usuarioLogeado.rol == 2" mat-button routerLink="/paciente">
+      <mat-icon>person</mat-icon> Pacientes
+    </button>
 
-    </mat-toolbar-row>
+    <button *ngIf="!estaLogeado" color="primary" mat-button [matMenuTriggerFor]="menu">
+      <mat-icon>view_headline</mat-icon> Entrar al sistema
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item routerLink="/login">
+        <mat-icon>login</mat-icon> Entrar
+      </button>
+      <button mat-menu-item routerLink="/registro">
+        <mat-icon>person_add</mat-icon> Registarse
+      </button>
+    </mat-menu>
+
+    <button *ngIf="estaLogeado" color="primary" mat-button [matMenuTriggerFor]="menuLogeado">
+      <mat-icon>view_headline</mat-icon> {{usuarioLogeado.nombre}}
+    </button>
+    <mat-menu #menuLogeado="matMenu">
+      <button mat-menu-item routerLink="/bienvenida">
+        <mat-icon>supervisor_account</mat-icon> Mi Perfil
+      </button>
+      <button *ngIf="estaLogeado && usuarioLogeado.rol == 1" mat-button color="accent" routerLink="/panel-administrador">
+        <mat-icon>mode_edit</mat-icon> Panel Administrador
+      </button>
+      <button matTooltip="Cerrar Sesión" *ngIf="estaLogeado" color="primary" mat-button (click)="cerrarSesion()">
+        <mat-icon>logout</mat-icon> Cerrar Sesión
+      </button>
+    </mat-menu>
+  </mat-toolbar-row>
 </mat-toolbar>

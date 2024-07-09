@@ -1,31 +1,30 @@
-import { Component, Input } from '@angular/core';
-import { UsuarioService } from '../../../services/usuario.service';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TurnosService } from '../../../services/turnos.service';
-import { EstadoTurno } from '../../../interfaces/estado-turno';
+import { MatIcon } from '@angular/material/icon';
+import { TurnosService } from '../../services/turnos.service';
+import { SharedServiceService } from '../../services/shared-service.service';
+import { EstadoTurno } from '../../interfaces/estado-turno';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
-  selector: 'app-perfil-paciente',
+  selector: 'app-paciente-esp',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './perfil-paciente.component.html',
-  styleUrl: './perfil-paciente.component.css'
+  imports: [CommonModule, FormsModule, MatIcon, SpinnerComponent, ReactiveFormsModule],
+  templateUrl: './paciente-esp.component.html',
+  styleUrl: './paciente-esp.component.css'
 })
-export class PerfilPacienteComponent {
-  @Input() datosPaciente: any;
-  primeraImagen: any;
-  segundaImagen: any;
-  mostrarHistoria: boolean = false;
-  turnos: any;
+export class PacienteEspComponent {
+  pacienteSeleccionado: any | null = null;
+  pacientes: any;
+  datosUsuario: any;
   estadoTurno = EstadoTurno;
-  turnoSeleccionadoHistoria: any;
+  isLoading = true;
   mostrarHistoriaClinicaDisable: boolean = false;
+  turnoSeleccionadoHistoria: any;
   historiaClinicaForm!: FormGroup;
 
-
-
-  constructor(private usuarioServices:UsuarioService, private turnoService: TurnosService, private fb: FormBuilder){  
+  constructor(private turnoService: TurnosService, private sharedService: SharedServiceService, private fb: FormBuilder) {
     this.historiaClinicaForm = this.fb.group({
       altura: ['', Validators.required],
       peso: ['', Validators.required],
@@ -33,36 +32,35 @@ export class PerfilPacienteComponent {
       presion: ['', Validators.required],
       datosDinamicos: this.fb.array([])
     });
-  }
+   }
 
   async ngOnInit(){
-    await this.guardarImagenes(this.datosPaciente);
-    this.cargarTurnos();
+    this.sharedService.estadoCompartido$.subscribe(estado => {
+      this.datosUsuario = estado.usuarioLogeado;      
+    });
+    await this.obtenerYOrdenarTurnos(this.datosUsuario.email);
+    this.isLoading = false;
+    
   }
 
-  async cargarTurnos(){
-    this.turnos = await this.turnoService.obtenerTurnosPaciente(this.datosPaciente.email);
-  }
-
-
-  async guardarImagenes(usuarios: any) {   
-    this.primeraImagen = await this.cargarImagenes(usuarios.rutaArchivoUno);
-    this.segundaImagen = await this.cargarImagenes(usuarios.rutaArchivoDos);
-  }
-
-
-  async cargarImagenes(rutaCarpeta: string): Promise<string> {    
+  async obtenerYOrdenarTurnos(especialistaEmail: string) {
     try {
-      const imagenes = await this.usuarioServices.obtenerImagen(rutaCarpeta);      
-      return imagenes;
+      const turnosPorPaciente = await this.turnoService.obtenerTurnosPorPaciente(especialistaEmail);
+      
+      this.pacientes = Array.from(turnosPorPaciente.values());
+    
+      if(this.pacientes.length > 0){
+        this.pacienteSeleccionado = this.pacientes[0];
+      }
+
+      console.log('Turnos ordenados por paciente:', this.pacientes);
     } catch (error) {
-      console.error('Error al cargar las imágenes:', error);
-      throw error;
+      console.error('Error al obtener y ordenar los turnos:', error);
     }
   }
 
-  mostrarHistoriaClinica(){
-    this.mostrarHistoria == true ? this.mostrarHistoria = false: this.mostrarHistoria = true;
+  seleccionarPaciente(paciente: any): void {
+    this.pacienteSeleccionado = paciente;
   }
 
   verHistoriaClinica(turno: any){
@@ -103,5 +101,4 @@ export class PerfilPacienteComponent {
   cerrarModal() {
      this.mostrarHistoriaClinicaDisable = false;
   }
-  
 }

@@ -1,0 +1,56 @@
+<div class="modal" tabindex="-1" role="dialog" [ngClass]="{ 'show d-block': mostrarHistoriaClinica }">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Cargar Historia Clínica</h5>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="historiaClinicaForm">
+            <div class="form-group">
+              <label for="altura">Altura</label>
+              <input type="number" class="form-control" id="altura" formControlName="altura">
+            </div>
+            <div class="form-group">
+              <label for="peso">Peso</label>
+              <input type="number" class="form-control" id="peso" formControlName="peso">
+            </div>
+            <div class="form-group">
+              <label for="temperatura">Temperatura</label>
+              <input type="number" class="form-control" id="temperatura" formControlName="temperatura">
+            </div>
+            <div class="form-group">
+              <label for="presion">Presión</label>
+              <input type="text" class="form-control" id="presion" formControlName="presion">
+            </div>
+  
+            <div formArrayName="datosDinamicos">
+              <div *ngFor="let campo of datosDinamicos.controls; let i = index" [formGroupName]="i">
+                <br>
+                <div class="form-group">
+                  <label for="clave">Clave</label>
+                  <input type="text" class="form-control" formControlName="clave" placeholder="Clave">
+                </div>
+                <div class="form-group">
+                  <label for="valor">Valor</label>
+                  <input type="text" class="form-control" formControlName="valor" placeholder="Valor">
+                </div>
+                <br>
+                <button type="button" class="btn btn-danger" (click)="eliminarCampo(i)">Eliminar</button>
+              </div>
+            </div>
+
+            <br>
+            <br>
+  
+            <div class="form-group text-right">
+              <button type="button" class="btn btn-success" [disabled]="datosDinamicos.length >= 3" (click)="agregarCampo()">Agregar Campo</button>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cerrar</button>
+          <button type="button" class="btn btn-primary" (click)="guardarHistoriaClinica()">Guardar Historia Clínica</button>
+        </div>
+      </div>
+    </div>
+  </div>

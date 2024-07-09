@@ -1,37 +1,114 @@
-<br>
-<br>
 <div class="card">
-    <h5 class="card-title">Paciente</h5>
-    <div class="row g-0">
-      <div class="col-md-4">
-        <div class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img [src]="primeraImagen" class="d-block w-100" alt="Imagen 1">
-            </div>
-            <div class="carousel-item">
-              <img [src]="segundaImagen" class="d-block w-100" alt="Imagen 2">
+  <h5 class="card-title">Paciente</h5>
+  <div class="row g-0">
+    <div class="col-md-4">
+      <div class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img [src]="primeraImagen" class="d-block w-100" alt="Imagen 1">
+          </div>
+          <div class="carousel-item">
+            <img [src]="segundaImagen" class="d-block w-100" alt="Imagen 2">
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target=".carousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target=".carousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5>{{ datosPaciente.apellido }}, {{ datosPaciente.nombre }}</h5>
+        <p class="card-text">DNI: {{ datosPaciente.dni }}</p>
+        <p class="card-text">Edad: {{ datosPaciente.edad }}</p>
+        <p class="card-text">Email: {{ datosPaciente.email }}</p>
+        <p class="card-text">Obra Social: {{ datosPaciente.obraSocial }}</p>
+        <p class="card-text">Fecha de Registro: {{ datosPaciente.fecha_registro }}</p>
+      </div>
+    </div>
+    <button class="btn btn-primary" (click)="mostrarHistoriaClinica()">Ver Historia Clínica</button>
+  </div>    
+</div>
+
+<div *ngIf="mostrarHistoria" class="mt-4">
+  <div *ngFor="let turno of turnos" class="list-group-item turn-card">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h5>Especialidad: {{ turno.especialidad }}</h5>
+        <p>Paciente: {{ turno.paciente.nombre }}</p>
+        <p>Especialista: {{ turno.especialista.nombre }}</p>
+        <p>Fecha: {{ turno.fecha }} - Hora: {{ turno.hora }}</p>
+        <p>Estado: 
+          <span class="badge" [class.bg-success]="turno.estado === estadoTurno.Confirmado"
+                              [class.bg-warning]="turno.estado === estadoTurno.Pendiente"
+                              [class.bg-secondary]="turno.estado === estadoTurno.Cancelado"
+                              [class.bg-info]="turno.estado === estadoTurno.Realizado"
+                              [class.bg-dark]="turno.estado === estadoTurno.Rechazado"
+                              [class.bg-primary]="turno.estado === estadoTurno.Finalizado">
+            {{ turno.estado == estadoTurno.Pendiente ? "Pendiente" : turno.estado == estadoTurno.Confirmado ? "Confirmado" : turno.estado == estadoTurno.Cancelado ? "Cancelado" : turno.estado == estadoTurno.Rechazado ? "Rechazado" : turno.estado == estadoTurno.Realizado ? "Realizado" : "Finalizado" }}
+          </span>
+        </p>
+      </div>
+      <button class="btn btn-primary" (click)="verHistoriaClinica(turno)">Ver Historia Clínica</button>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal" tabindex="-1" role="dialog" [ngClass]="{ 'show d-block': mostrarHistoriaClinicaDisable }">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Historia Clínica</h5>
+      </div>
+      <div class="modal-body">
+        <form *ngIf="mostrarHistoriaClinicaDisable" [formGroup]="historiaClinicaForm">
+          <div class="form-group">
+            <label for="altura">Altura</label>
+            <input type="number" class="form-control" id="altura" formControlName="altura" [value]="turnoSeleccionadoHistoria.historiaClinica.altura" [readonly]="true">
+          </div>
+          <div class="form-group">
+            <label for="peso">Peso</label>
+            <input type="number" class="form-control" id="peso" formControlName="peso" [value]="turnoSeleccionadoHistoria.historiaClinica.peso" [readonly]="true">
+          </div>
+          <div class="form-group">
+            <label for="temperatura">Temperatura</label>
+            <input type="number" class="form-control" id="temperatura" formControlName="temperatura" [value]="turnoSeleccionadoHistoria.historiaClinica.temperatura" [readonly]="true">
+          </div>
+          <div class="form-group">
+            <label for="presion">Presión</label>
+            <input type="text" class="form-control" id="presion" formControlName="presion" [value]="turnoSeleccionadoHistoria.historiaClinica.presion" [readonly]="true">
+          </div>
+
+          <div formArrayName="datosDinamicos" *ngIf="turnoSeleccionadoHistoria.historiaClinica.datosDinamicos.length > 0">
+            <div *ngFor="let campo of turnoSeleccionadoHistoria.historiaClinica.datosDinamicos; let i = index" [formGroupName]="i">
+              <br>
+              <div class="form-group">
+                <label for="clave">Clave</label>
+                <input type="text" class="form-control" formControlName="clave" [value]="campo.clave" [readonly]="true">
+              </div>
+              <div class="form-group">
+                <label for="valor">Valor</label>
+                <input type="text" class="form-control" formControlName="valor" [value]="campo.valor" [readonly]="true">
+              </div>
+              <br>
             </div>
           </div>
-          <button class="carousel-control-prev" type="button" data-bs-target=".carousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target=".carousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
+
+          <br>
+          <br>
+
+        </form>
       </div>
-      <div class="col-md-8">
-        <div class="card-body">
-          <h5 >{{ datosPaciente.apellido }}, {{ datosPaciente.nombre }}</h5>
-          <p class="card-text">DNI: {{ datosPaciente.dni }}</p>
-          <p class="card-text">Edad: {{ datosPaciente.edad }}</p>
-          <p class="card-text">Email: {{ datosPaciente.email }}</p>
-          <p class="card-text">Obra Social: {{ datosPaciente.obraSocial }}</p>
-          <p class="card-text">Fecha de Registro: {{ datosPaciente.fecha_registro }}</p>
-        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cerrar</button>
       </div>
     </div>
   </div>
+</div>

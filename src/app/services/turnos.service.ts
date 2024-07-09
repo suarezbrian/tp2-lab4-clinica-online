@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Turno } from '../interfaces/turno';
-import { Firestore, addDoc, collection, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
+import { Firestore, Timestamp, addDoc, collection, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
 import { AlertsService } from './alerts.service';
 import { EstadoTurno } from "../interfaces/estado-turno";
+import { UsuarioService } from './usuario.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TurnosService {
 
-  constructor(private firestore: Firestore, private alertService: AlertsService) { }
+  constructor(private firestore: Firestore, private alertService: AlertsService, private usuarioServices: UsuarioService) { }
 
   async guardarTurno(turnoData: Turno) {
     try {
@@ -167,4 +168,65 @@ export class TurnosService {
       this.alertService.mostrarAlerta(false, 'No se pudo buscar el turno.', 2000);
     }
   }
+
+  async obtenerTurnosPorPaciente(especialistaEmail: string): Promise<any[]> {
+    const collectionRef = collection(this.firestore, 'turnos');
+  
+    try {
+      const querySnapshot = await getDocs(
+        query(
+          collectionRef,
+          where('especialista.email', '==', especialistaEmail)
+        )
+      );
+  
+      if (!querySnapshot.empty) {
+        const pacientesPorEmail: Map<string, any> = new Map();
+  
+        for (const doc of querySnapshot.docs) {
+          const turno = doc.data() as any;
+          const pacienteEmail = turno.paciente.email;
+          const urlImagen = await this.usuarioServices.obtenerImagen(turno.paciente.rutaArchivoUno);
+  
+          if (!pacientesPorEmail.has(pacienteEmail)) {
+            const nuevoPaciente = {
+              nombre: turno.paciente.nombre,
+              dni: turno.paciente.dni,
+              edad: turno.paciente.edad,
+              email: turno.paciente.email,
+              obraSocial: turno.paciente.obraSocial,
+              fecha_registro: (turno.paciente.fecha_registro as Timestamp).toDate(),
+              imagen: urlImagen,
+              turnos: []
+            };
+            pacientesPorEmail.set(pacienteEmail, nuevoPaciente);
+          }
+  
+          const paciente = pacientesPorEmail.get(pacienteEmail)!;
+          paciente.turnos.push({
+            especialidad: turno.especialidad,
+            especialista: turno.especialista,
+            fecha: turno.fecha,
+            hora: turno.hora,
+            estado: turno.estado,
+            historiaClinica: turno.historiaClinica,
+            historiaClinicaCargada: turno.historiaClinicaCargada,
+            comentario: turno.comentario,
+            calificacion: turno.calificacion,
+            encuestaSatifaccion: turno.encuestaSatifaccion,
+          });
+        }
+  
+        return Array.from(pacientesPorEmail.values());
+      } else {
+        console.log(`No se encontraron turnos para el especialista con email = ${especialistaEmail}.`);
+        return [];
+      }
+    } catch (error) {
+      console.error(`Error al buscar turnos para el especialista con email ${especialistaEmail}:`, error);
+      throw new Error(`No se pudo buscar turnos para el especialista con email ${especialistaEmail}.`);
+    }
+  }
+
+  
 }

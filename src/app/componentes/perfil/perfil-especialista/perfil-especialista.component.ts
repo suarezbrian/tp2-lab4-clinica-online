@@ -3,7 +3,7 @@ import { UsuarioService } from '../../../services/usuario.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SharedServiceService } from '../../../services/shared-service.service';
-import { Timestamp } from '@angular/fire/firestore';
+import { map, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-perfil-especialista',
@@ -32,13 +32,14 @@ export class PerfilEspecialistaComponent {
   async ngOnInit(){
     await this.guardarImagenes(this.datosEspecialista);
     this.mostrarHorarios(this.datosEspecialista);
+    this.cargarEspecialista();
+    console.log(this.datosEspecialista);
   }
 
   mostrarHorarios(especialista: any){
     if(especialista.disponibilidadHoraria.diaInicio !== ""){
       this.mostrarDisponibilidad = true;
     }else{
-      console.log("qqqq");
       this.mostrarDisponibilidad = false;
     }
   }
@@ -61,7 +62,6 @@ export class PerfilEspecialistaComponent {
 
   async cargarEspecialista(){
     this.datosCargados = await this.usuarioServices.buscarDatoPorCampo('usuarios', 'email', this.datosEspecialista.email);
-    console.log("aqui",this.datosCargados);
   }
 
  async guardarDisponibilidadHoraria(){    

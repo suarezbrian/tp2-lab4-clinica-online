@@ -1,5 +1,6 @@
 import { Especialista } from "./especialista";
 import { EstadoTurno } from "./estado-turno";
+import { HistoriaClinica } from "./historia-clinica";
 import { Paciente } from "./paciente";
 
 
@@ -16,4 +17,7 @@ export interface Turno {
     comentarioRechazar?: string;
     encuestaSatifaccion: {respueta1:boolean,respueta2:boolean,respuesta3:boolean, encuestaCompletada: boolean};
     calificacion: {estrellas: number, comentario: string, calificacionHecha:boolean};
+    historiaClinicaCargada?: boolean;
+    historiaClinica?: HistoriaClinica;
+    
 }

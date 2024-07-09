@@ -1,2 +1,2 @@
-<app-perfil-paciente *ngIf="usuarioLogeado?.rol === 3" [datosPaciente]="usuarioLogeado"></app-perfil-paciente>
+<app-perfil-paciente *ngIf="usuarioLogeado?.rol === 3 || usuarioLogeado?.rol === 1" [datosPaciente]="usuarioLogeado"></app-perfil-paciente>
 <app-perfil-especialista *ngIf="usuarioLogeado?.rol === 2" [datosEspecialista]="usuarioLogeado"></app-perfil-especialista>

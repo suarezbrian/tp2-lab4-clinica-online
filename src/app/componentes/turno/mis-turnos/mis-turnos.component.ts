@@ -4,14 +4,14 @@ import { RouterLink } from '@angular/router';
 import { TurnosService } from '../../../services/turnos.service';
 import { AlertsService } from '../../../services/alerts.service';
 import { EstadoTurno } from "../../../interfaces/estado-turno";
-import { FormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Turno } from '../../../interfaces/turno';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-mis-turnos',
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule, MatIcon],
+  imports: [RouterLink, CommonModule, FormsModule, MatIcon, ReactiveFormsModule],
   templateUrl: './mis-turnos.component.html',
   styleUrl: './mis-turnos.component.css'
 })
@@ -31,10 +31,25 @@ export class MisTurnosComponent {
   turnosFiltrados: Turno[] = [];
   filtroEspecialidad: string = '';
   filtroEspecialista: string = '';
+  mostrarHistoriaClinicaDisable: boolean = false;
+  turnoSeleccionadoHistoria: any;
+  historiaClinicaForm!: FormGroup;
 
-  constructor(private turnoService: TurnosService, private alertService: AlertsService) {}
+  constructor(private turnoService: TurnosService, private alertService: AlertsService, private fb: FormBuilder) {
+    this.historiaClinicaForm = this.fb.group({
+      altura: ['', Validators.required],
+      peso: ['', Validators.required],
+      temperatura: ['', Validators.required],
+      presion: ['', Validators.required],
+      datosDinamicos: this.fb.array([])
+    });
+  }
 
   async ngOnInit() {
+    this.cargarTurnos();
+  }
+
+  async cargarTurnos(){
     this.turnos = await this.turnoService.obtenerTurnosPaciente(this.datosUsuario.email);
     this.turnosFiltrados = this.turnos;
   }
@@ -106,6 +121,7 @@ export class MisTurnosComponent {
 
       await this.turnoService.actualizarTurno(this.turnoSeleccionado.especialista.email, this.turnoSeleccionado.fecha, this.turnoSeleccionado.hora, this.turnoSeleccionado.estado, camposActualizar);
       this.cerrarModal();
+      this.cargarTurnos();
     }
   }
 
@@ -135,9 +151,50 @@ export class MisTurnosComponent {
         encuestaCompletada: true
       }      
     };
-    console.log(camposActualizar);
     await this.turnoService.actualizarTurno(this.turnoSeleccionado.especialista.email, this.turnoSeleccionado.fecha, this.turnoSeleccionado.hora, this.turnoSeleccionado.estado, camposActualizar);
     this.cerrarEncuesta();
+    this.cargarTurnos();
   }
+
+
+  verHistoriaClinica(turno: any){
+
+    this.turnoSeleccionadoHistoria = turno;
+    this.mostrarHistoriaClinicaDisable = true;
+
+    this.historiaClinicaForm.patchValue({
+      altura: this.turnoSeleccionadoHistoria.historiaClinica.altura,
+      peso: this.turnoSeleccionadoHistoria.historiaClinica.peso,
+      temperatura: this.turnoSeleccionadoHistoria.historiaClinica.temperatura,
+      presion: this.turnoSeleccionadoHistoria.historiaClinica.presion,
+    });
+  
+    if (this.turnoSeleccionadoHistoria.historiaClinica.datosDinamicos) {
+      this.turnoSeleccionadoHistoria.historiaClinica.datosDinamicos.forEach((dato: any) => {
+        this.agregarDatoDinamico(dato.clave, dato.valor);
+      });
+    }
+  }
+
+  agregarDatoDinamico(clave: string, valor: string) {
+
+    if (!this.historiaClinicaForm) {
+        return;  
+    }
+    const datosDinamicosFormArray = this.historiaClinicaForm.get('datosDinamicos') as FormArray;
+    if (!datosDinamicosFormArray) {
+        return;  
+    }
+
+    datosDinamicosFormArray.push(this.fb.group({
+        clave: [clave],
+        valor: [valor]
+    }));
+  }
+
+  cerrarHistorialClinico() {
+     this.mostrarHistoriaClinicaDisable = false;
+  }
+  
 
 }

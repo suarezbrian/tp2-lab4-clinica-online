@@ -1,4 +1,5 @@
 import { Persona } from '../interfaces/persona';
+import { HistoriaClinica } from './historia-clinica';
 
 
 export interface Paciente extends Persona {
@@ -9,5 +10,6 @@ export interface Paciente extends Persona {
     imagenDos?: File;  
     rutaArchivoUno?: string;
     rutaArchivoDos?: string;
+    historiaClinica?: HistoriaClinica[];   
 
   }

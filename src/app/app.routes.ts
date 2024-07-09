@@ -50,6 +50,12 @@ export const routes: Routes = [
         loadComponent:()=> import('./componentes/perfil/perfil.component').then(c => c.PerfilComponent),
         canActivate: [authGuard],
         data: { rolesPermitidos: [Rol.Paciente,Rol.Administrador, Rol.Especialista] }
+    },
+    {
+        path: 'paciente',
+        loadComponent:()=> import('./componentes/paciente-esp/paciente-esp.component').then(c => c.PacienteEspComponent),
+        canActivate: [authGuard],
+        data: { rolesPermitidos: [Rol.Especialista] }
     }
 
 
