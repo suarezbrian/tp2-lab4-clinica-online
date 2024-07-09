@@ -1,256 +1,209 @@
-<br>
-<h3 style="text-align: center;">PANEL DE ADMINISTRADCIÓN</h3>
-<mat-divider></mat-divider>
-<br>
-<h4 style="text-align: start;">EDITAR USUARIO</h4>
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
+  <div class="mat-elevation-z8">
+    <mat-tab-group [backgroundColor]="'primary'">
 
-    <ng-container matColumnDef="nombre">
-        <th mat-header-cell *matHeaderCellDef>Nombre</th>
-        <td mat-cell *matCellDef="let element">{{ element.nombre }}</td>
-      </ng-container>
-
-    <ng-container matColumnDef="apellido">
-      <th mat-header-cell *matHeaderCellDef>Apellido</th>
-      <td mat-cell *matCellDef="let element">{{ element.apellido }}</td>
-    </ng-container>
+      <mat-tab label="Especialistas">
+        <table mat-table [dataSource]="especialistas" class="mat-elevation-z8 demo-table">
   
-    <ng-container matColumnDef="dni">
-      <th mat-header-cell *matHeaderCellDef>DNI</th>
-      <td mat-cell *matCellDef="let element">{{ element.dni }}</td>
-    </ng-container>
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let element">{{ element.nombre }}</td>
+          </ng-container>
   
-    <ng-container matColumnDef="edad">
-      <th mat-header-cell *matHeaderCellDef>Edad</th>
-      <td mat-cell *matCellDef="let element">{{ element.edad }}</td>
-    </ng-container>
+          <ng-container matColumnDef="apellido">
+            <th mat-header-cell *matHeaderCellDef>Apellido</th>
+            <td mat-cell *matCellDef="let element">{{ element.apellido }}</td>
+          </ng-container>
   
-    <ng-container matColumnDef="email">
-      <th mat-header-cell *matHeaderCellDef>Email</th>
-      <td mat-cell *matCellDef="let element">{{ element.email }}</td>
-    </ng-container>
+          <ng-container matColumnDef="dni">
+            <th mat-header-cell *matHeaderCellDef>DNI</th>
+            <td mat-cell *matCellDef="let element">{{ element.dni }}</td>
+          </ng-container>
   
-    <ng-container matColumnDef="especialidad">
-      <th mat-header-cell *matHeaderCellDef>Especialidad</th>
-      <td mat-cell *matCellDef="let element">{{ element.especialidad || '(N/A)' }}</td>
-    </ng-container>
+          <ng-container matColumnDef="edad">
+            <th mat-header-cell *matHeaderCellDef>Edad</th>
+            <td mat-cell *matCellDef="let element">{{ element.edad }}</td>
+          </ng-container>
   
-    <ng-container matColumnDef="fecha_registro">
-      <th mat-header-cell *matHeaderCellDef>Fecha de Registro</th>
-      <td mat-cell *matCellDef="let element">{{ (element.fecha_registro | date) || '(N/A)' }}</td>
-    </ng-container>
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+          </ng-container>
   
-    <ng-container matColumnDef="password">
-      <th mat-header-cell *matHeaderCellDef>Password</th>
-      <td mat-cell *matCellDef="let element">{{ element.password }}</td>
-    </ng-container>
+          <ng-container matColumnDef="especialidad">
+            <th mat-header-cell *matHeaderCellDef>Especialidad</th>
+            <td mat-cell *matCellDef="let element">{{ element.especialidades || '(N/A)' }}</td>
+          </ng-container>
   
-    <ng-container matColumnDef="rol">
-      <th mat-header-cell *matHeaderCellDef>Rol</th>
-      <td mat-cell *matCellDef="let element">{{ element.rol == 1? 'Administrador': element.rol == 2? 'Especialista': element.rol == 3? 'Paciente': '(N/A)' }}</td>
-    </ng-container>
+          <ng-container matColumnDef="fecha_registro">
+            <th mat-header-cell *matHeaderCellDef>Fecha de Registro</th>
+            <td mat-cell *matCellDef="let element">{{ (element.fecha_registro | date) || '(N/A)' }}</td>
+          </ng-container>
   
-    <ng-container matColumnDef="rutaArchivoUno">
-      <th mat-header-cell *matHeaderCellDef>Ruta de Archivo Uno</th>
-      <td mat-cell *matCellDef="let element">{{ element.rutaArchivoUno }}</td>
-    </ng-container>
+          <ng-container matColumnDef="password">
+            <th mat-header-cell *matHeaderCellDef>Password</th>
+            <td mat-cell *matCellDef="let element">{{ element.password }}</td>
+          </ng-container>
   
-    <ng-container matColumnDef="rutaArchivoDos">
-      <th mat-header-cell *matHeaderCellDef>Ruta de Archivo Dos</th>
-      <td mat-cell *matCellDef="let element">{{ element.rutaArchivoDos || '(N/A)' }}</td>
-    </ng-container>
+          <ng-container matColumnDef="rol">
+            <th mat-header-cell *matHeaderCellDef>Rol</th>
+            <td mat-cell *matCellDef="let element">{{ element.rol == 1? 'Administrador': element.rol == 2? 'Especialista': element.rol == 3? 'Paciente': '(N/A)' }}</td>
+          </ng-container>
   
-    <ng-container matColumnDef="obraSocial">
-      <th mat-header-cell *matHeaderCellDef>Obra Social</th>
-      <td mat-cell *matCellDef="let element">{{ element.obraSocial || '(N/A)' }}</td>
-    </ng-container>
+          <ng-container matColumnDef="rutaArchivoUno">
+            <th mat-header-cell *matHeaderCellDef>Ruta de Archivo Uno</th>
+            <td mat-cell *matCellDef="let element">{{ element.rutaArchivoUno }}</td>
+          </ng-container>
   
-    <ng-container matColumnDef="validarEstado">
-      <th mat-header-cell *matHeaderCellDef>Validar Estado</th>
-      <td mat-cell *matCellDef="let element">{{ element.validarEstado == undefined? '(N/A)':element.validarEstado? 'Si':'No' }}</td>
-    </ng-container>
   
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-
-    <tr mat-row       
-        (click)="handleClick(row)"
-        *matRowDef="let row; columns: displayedColumns;">
-    </tr>
-  </table>
-
-<br>
-
-<div class="mat-card">
-
-    <h3 style="text-align: center;">Modo Edición</h3>
-    <strong *ngIf="!esEspecialista && selectedUser && !esAdministrador">Se seleccionó un PACIENTE.</strong>
-    <strong *ngIf="esEspecialista && selectedUser && !esAdministrador">Se seleccionó un ESPECIALISTA.</strong>
-    <strong *ngIf="esAdministrador && selectedUser">Se seleccionó un ADMINISTRADOR.</strong>
-
-    <span *ngIf="!selectedUser">Seleccione una fila para empezar a editar.</span>
-    <form [formGroup]="formEdit" *ngIf="selectedUser" (ngSubmit)="actualizarDatos()" class="edit-form">
-
-        <div class="form-row">
-
-            <mat-form-field appearance="fill" class="form-field">
-              <mat-label>Nombre</mat-label>
-              <input matInput formControlName="nombre" [(ngModel)]="selectedUser.nombre" name="nombre">
-              <mat-error *ngIf="formEdit.get('nombre')?.touched && (formEdit.get('nombre')?.hasError('required') || formEdit.get('nombre')?.hasError('pattern')) || formEdit.get('nombre')?.hasError('maxlength')">
-                  <span *ngIf="formEdit.get('nombre')?.hasError('required')">Nombre es requerido.</span>
-                  <span *ngIf="formEdit.get('nombre')?.hasError('pattern')">Debe contener solo letras.</span>
-                  <span *ngIf="formEdit.get('nombre')?.hasError('maxlength')">El nombre es muy largo, max: 15 caracteres.</span>
-              </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="fill" class="form-field">
-              <mat-label>Apellido</mat-label>
-              <input matInput formControlName="apellido" [(ngModel)]="selectedUser.apellido" name="apellido" >
-              <mat-error *ngIf="formEdit.get('apellido')?.touched && (formEdit.get('apellido')?.hasError('required') || formEdit.get('apellido')?.hasError('pattern')) || formEdit.get('apellido')?.hasError('maxlength')">
-                  <span *ngIf="formEdit.get('apellido')?.hasError('required')">Apellido es requerido.</span>
-                  <span *ngIf="formEdit.get('apellido')?.hasError('pattern')">Debe contener solo letras.</span>
-                  <span *ngIf="formEdit.get('apellido')?.hasError('maxlength')">El apellido es muy largo, max: 15 caracteres.</span>
-              </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="fill" class="form-field">
-              <mat-label>Edad</mat-label>
-              <input matInput type="number" formControlName="edad" [(ngModel)]="selectedUser.edad" name="edad">
-              <mat-error *ngIf="formEdit.get('edad')?.touched && (formEdit.get('edad')?.hasError('required') || formEdit.get('edad')?.hasError('min'))">
-                  <span *ngIf="formEdit.get('edad')?.hasError('required')"> Edad es requerido.</span>
-                  <span *ngIf="formEdit.get('edad')?.hasError('min')">La Edad minima para el paciente debe ser de 1 año.</span>
-              </mat-error>
-          </mat-form-field>
-            
-        </div>
-
-        <div class="form-row">
-
-            <mat-form-field appearance="fill" class="form-field">
-              <mat-label>DNI</mat-label>
-              <input matInput formControlName="dni" [(ngModel)]="selectedUser.dni" name="dni">
-              <mat-error *ngIf="formEdit.get('dni')?.touched && (formEdit.get('dni')?.hasError('required') || formEdit.get('dni')?.hasError('minlength'))">
-                  <span *ngIf="formEdit.get('dni')?.hasError('required')"> DNI es requerido.</span>
-                  <span *ngIf="formEdit.get('dni')?.hasError('minlength')">Formato incorrecto. El DNI debe estar compuesto por 8 digitos.</span>
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field appearance="fill" class="form-field">
-              <mat-label>Mail</mat-label>
-              <input matInput type="email" formControlName="email" [(ngModel)]="selectedUser.email" name="email">
-              <mat-error *ngIf="formEdit.get('email')?.touched && (formEdit.get('email')?.hasError('required') || formEdit.get('email')?.hasError('email'))">
-                  <span *ngIf="formEdit.get('email')?.hasError('required')"> Email es requerido.</span>
-                  <span *ngIf="formEdit.get('email')?.hasError('pattern')">Email no es válido.</span>
-              </mat-error>
-           </mat-form-field>
-
-
-
-            <mat-form-field appearance="fill" class="form-field">
-              <mat-label>Password</mat-label>
-              <input matInput type="password" formControlName="password" [(ngModel)]="selectedUser.password" name="password">
-              <mat-error *ngIf="formEdit.get('password')?.touched && (formEdit.get('password')?.hasError('required') || formEdit.get('password')?.hasError('minlength'))">
-                  <span *ngIf="formEdit.get('password')?.hasError('required')">  Contraseña es requerida.</span>
-                  <span *ngIf="formEdit.get('password')?.hasError('minlength')">La contraseña es muy corta, min: 5 digitos.</span>
-              </mat-error>
-          </mat-form-field>
-        </div>
-
-        <div class="form-row">
-
-            <mat-form-field *ngIf="!(formEdit.get('especialidad')?.value === 'otra') && esEspecialista && !esAdministrador; else otraEspecialidadField" class="form-field">
-              <mat-label>Especialidad</mat-label>
-              <mat-select formControlName="especialidad" #especialidadSelect>
-                <mat-option *ngFor="let item of especialidades" [value]="item.value">
-                  {{ item.viewValue }}
-                </mat-option>
-              </mat-select>
-            
-              <mat-error *ngIf="formEdit.get('especialidad')?.touched && formEdit.get('especialidad')?.hasError('required')">
-                <span>Especialidad es requerido.</span>
-              </mat-error>
-                            
-            </mat-form-field>
-            
-            
-            <ng-template #otraEspecialidadField>
-              <mat-form-field class="form-field" *ngIf="esEspecialista && !esAdministrador">
-                <mat-label>Otra Especialidad</mat-label>
-                <input matInput formControlName="otraEspecialidad">
-                <mat-error *ngIf="formEdit.get('otraEspecialidad')?.touched && (formEdit.get('otraEspecialidad')?.hasError('required') || formEdit.get('otraEspecialidad')?.hasError('pattern')) || formEdit.get('otraEspecialidad')?.hasError('maxlength')">
-                  <span *ngIf="formEdit.get('otraEspecialidad')?.hasError('required')">Especialidad es requerido.</span>
-                  <span *ngIf="formEdit.get('otraEspecialidad')?.hasError('maxlength')">El nombre de la especialidad no puede superar los 15 caracteres.</span>
-                  <span *ngIf="formEdit.get('otraEspecialidad')?.hasError('pattern')">Debe contener solo letras, sin espacios.</span>
-                </mat-error>
-            
-                <button mat-button (click)="volverASeleccion()">Volver a seleccionar especialidad</button>
-                
-              </mat-form-field>
-            </ng-template>
-
-            <mat-form-field appearance="fill" class="form-field">
-              <mat-label>Rol</mat-label>
-              <input matInput formControlName="rol"  [(ngModel)]="selectedUser.rol">
-              <mat-error *ngIf="formEdit.get('rol')?.touched && (formEdit.get('rol')?.hasError('required') || formEdit.get('rol')?.hasError('max')) || formEdit.get('rol')?.hasError('min')">
-                  <span *ngIf="formEdit.get('rol')?.hasError('required')"> El Rol es requerida.</span>
-                  <span *ngIf="formEdit.get('rol')?.hasError('min')">El valor minimo para el rol es 1.</span>
-                  <span *ngIf="formEdit.get('rol')?.hasError('max')">El valor maximo para el rol es 2.</span>
-              </mat-error>
-          </mat-form-field>
-
-            <mat-form-field appearance="fill" class="form-field" *ngIf="!esEspecialista && !esAdministrador">
-              <mat-label>Obra Social</mat-label>
-              <input matInput formControlName="obraSocial"  [(ngModel)]="selectedUser.obraSocial">
-              <mat-error *ngIf="formEdit.get('obraSocial')?.touched && (formEdit.get('obraSocial')?.hasError('required') || formEdit.get('obraSocial')?.hasError('maxlength')) || formEdit.get('obraSocial')?.hasError('pattern')">
-                  <span *ngIf="formEdit.get('obraSocial')?.hasError('required')"> Obra Social es requerida.</span>
-                  <span *ngIf="formEdit.get('obraSocial')?.hasError('maxlength')">El nombre de la Obra Social es muy largo, max: 25 caracteres.</span>
-                  <span *ngIf="formEdit.get('obraSocial')?.hasError('pattern')">Debe contener solo letras.</span>
-              </mat-error>
-          </mat-form-field>
-
-        </div>
-
-        <button mat-raised-button color="primary" type="submit" class="save-button">Guardar Cambios</button>
-
-    </form>
-</div>
-
-<mat-divider></mat-divider>
-<br>
-<h4 style="text-align: start;">VALIDAR ESPECIALISTA</h4>
-
-<div class="container">
-    <div class="tabla-especialistas">
-      <table mat-table [dataSource]="dataSourceValidar" matSort class="mat-elevation-z8">
-        <ng-container *ngFor="let col of displayedColumnsEspecialista" [matColumnDef]="col">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ col | titlecase }} </th>
-          <td mat-cell *matCellDef="let element"> {{ element[col] }} </td>
-        </ng-container>
+          <ng-container matColumnDef="validarEstado">
+            <th mat-header-cell *matHeaderCellDef>Validar Estado</th>
+            <td mat-cell *matCellDef="let element">
+              <button class="btn btn-warning" *ngIf="!element.validarEstado && element.rol === 2" (click)="habilitarEstado(element)">Habilitar</button>
+              <span *ngIf="element.validarEstado">Si</span>
+              <span *ngIf="!element.validarEstado && element.rol !== 2">(N/A)</span>
+            </td>
+          </ng-container>
   
-        <tr mat-header-row *matHeaderRowDef="displayedColumnsEspecialista"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumnsEspecialista;"
-            (click)="seleccionarEspecialista(row)"
-            [class.mat-row-selected]="selection.isSelected(row)">
-        </tr>
-      </table>
-    </div>
-  
-    <div  class="detalle-especialista">
-      <span *ngIf="!especialistaSeleccionado">Seleccione una fila para empezar.</span>
-      <div *ngIf="especialistaSeleccionado" class="cuadro-detalle">
-        <h3>Detalles del Especialista</h3>
-        <p><strong>Nombre:</strong> {{ especialistaSeleccionado?.nombre }}</p>
-        <p><strong>Apellido:</strong> {{ especialistaSeleccionado?.apellido }}</p>
-        <p><strong>DNI :</strong> {{ especialistaSeleccionado?.dni }}</p>
-        <p><strong>Email:</strong> {{ especialistaSeleccionado?.email }}</p>
-        <p><strong>Especialidad:</strong> {{ especialistaSeleccionado?.especialidad }}</p>
-        <p><strong>Rol:</strong> {{ especialistaSeleccionado.rol == 1? 'Administrador': especialistaSeleccionado.rol == 2? 'Especialista': especialistaSeleccionado.rol == 3? 'Paciente': '(N/A)' }}</p>
+          <tr mat-header-row *matHeaderRowDef="especialistasDisplayedColumns"></tr>
+          <tr mat-row       
+            (click)="handleClick(row)"
+            *matRowDef="let row; columns: especialistasDisplayedColumns;">
+          </tr>    
+        </table>
+      </mat-tab>
 
-        <button mat-raised-button color="primary" (click)="habilitarEspecialista()">Habilitar Especialista</button>
-      </div>
-    </div>
+      <mat-tab label="Pacientes">
+        <table mat-table [dataSource]="pacientes" class="mat-elevation-z8 demo-table">
+  
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let element">{{ element.nombre }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="apellido">
+            <th mat-header-cell *matHeaderCellDef>Apellido</th>
+            <td mat-cell *matCellDef="let element">{{ element.apellido }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="dni">
+            <th mat-header-cell *matHeaderCellDef>DNI</th>
+            <td mat-cell *matCellDef="let element">{{ element.dni }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="edad">
+            <th mat-header-cell *matHeaderCellDef>Edad</th>
+            <td mat-cell *matCellDef="let element">{{ element.edad }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="fecha_registro">
+            <th mat-header-cell *matHeaderCellDef>Fecha de Registro</th>
+            <td mat-cell *matCellDef="let element">{{ (element.fecha_registro | date) || '(N/A)' }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="password">
+            <th mat-header-cell *matHeaderCellDef>Password</th>
+            <td mat-cell *matCellDef="let element">{{ element.password }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="rol">
+            <th mat-header-cell *matHeaderCellDef>Rol</th>
+            <td mat-cell *matCellDef="let element">{{ element.rol == 1? 'Administrador': element.rol == 2? 'Especialista': element.rol == 3? 'Paciente': '(N/A)' }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="rutaArchivoUno">
+            <th mat-header-cell *matHeaderCellDef>Ruta de Archivo Uno</th>
+            <td mat-cell *matCellDef="let element">{{ element.rutaArchivoUno }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="rutaArchivoDos">
+            <th mat-header-cell *matHeaderCellDef>Ruta de Archivo Dos</th>
+            <td mat-cell *matCellDef="let element">{{ element.rutaArchivoDos || '(N/A)' }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="obraSocial">
+            <th mat-header-cell *matHeaderCellDef>Obra Social</th>
+            <td mat-cell *matCellDef="let element">{{ element.obraSocial || '(N/A)' }}</td>
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="pacientesDisplayedColumns"></tr>
+          <tr mat-row       
+            (click)="handleClick(row)"
+            *matRowDef="let row; columns: pacientesDisplayedColumns;">
+          </tr>    
+        </table>
+      </mat-tab>
+
+      <mat-tab label="Administradores">
+        <table mat-table [dataSource]="administradores" class="mat-elevation-z8 demo-table">
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let element">{{ element.nombre }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="apellido">
+            <th mat-header-cell *matHeaderCellDef>Apellido</th>
+            <td mat-cell *matCellDef="let element">{{ element.apellido }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="dni">
+            <th mat-header-cell *matHeaderCellDef>DNI</th>
+            <td mat-cell *matCellDef="let element">{{ element.dni }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="edad">
+            <th mat-header-cell *matHeaderCellDef>Edad</th>
+            <td mat-cell *matCellDef="let element">{{ element.edad }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="especialidad">
+            <th mat-header-cell *matHeaderCellDef>Especialidad</th>
+            <td mat-cell *matCellDef="let element">{{ element.especialidades || '(N/A)' }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="fecha_registro">
+            <th mat-header-cell *matHeaderCellDef>Fecha de Registro</th>
+            <td mat-cell *matCellDef="let element">{{ (element.fecha_registro | date) || '(N/A)' }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="password">
+            <th mat-header-cell *matHeaderCellDef>Password</th>
+            <td mat-cell *matCellDef="let element">{{ element.password }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="rol">
+            <th mat-header-cell *matHeaderCellDef>Rol</th>
+            <td mat-cell *matCellDef="let element">{{ element.rol == 1? 'Administrador': element.rol == 2? 'Especialista': element.rol == 3? 'Paciente': '(N/A)' }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="rutaArchivoUno">
+            <th mat-header-cell *matHeaderCellDef>Ruta de Archivo Uno</th>
+            <td mat-cell *matCellDef="let element">{{ element.rutaArchivoUno }}</td>
+          </ng-container>
+  
+  
+          <tr mat-header-row *matHeaderRowDef="administradoresDisplayedColumns"></tr>
+          <tr mat-row       
+            (click)="handleClick(row)"
+            *matRowDef="let row; columns: administradoresDisplayedColumns;">
+          </tr>  
+        </table>
+      </mat-tab>
+
+    </mat-tab-group>
   </div>
+<br>
 
-  <mat-divider></mat-divider>
+<mat-divider></mat-divider>
 <br>
 <h4 style="text-align: start;">REGISTRAR NUEVO USUARIO</h4>
 

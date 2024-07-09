@@ -43,7 +43,7 @@ export class RegistroEspecialistaComponent {
       especialidades: new FormControl([], Validators.required),
       otraEspecialidad: new FormControl("", [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]),
       imagenUno: new FormControl("", [Validators.required]),
-      recaptchaReactive: new FormControl(null, Validators.required)
+      //recaptchaReactive: new FormControl(null, Validators.required)
     });
   }
 

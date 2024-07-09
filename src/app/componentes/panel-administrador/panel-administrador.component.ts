@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
+import {MatButton, MatButtonModule} from '@angular/material/button';
 import {MatTableModule} from '@angular/material/table';
 import { UsuarioService } from '../../services/usuario.service';
 import { CommonModule } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
 import {MatGridListModule} from '@angular/material/grid-list';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
@@ -29,51 +29,54 @@ import { RegistroAdministradorComponent } from '../registro-administrador/regist
     ]),
   ],
   standalone: true,
-  imports: [RegistroAdministradorComponent,RegistroEspecialistaComponent,RegistroPacienteComponent, MatSelectModule, MatTabsModule, MatCheckboxModule, MatDividerModule, MatTableModule, MatButtonModule, MatIconModule, CommonModule, MatGridListModule, MatInputModule, MatFormFieldModule,  FormsModule, ReactiveFormsModule],
+  imports: [RegistroAdministradorComponent,RegistroEspecialistaComponent,
+    RegistroPacienteComponent, MatSelectModule, MatTabsModule, 
+    MatCheckboxModule, MatDividerModule, MatTableModule, MatButtonModule, 
+    MatIconModule, CommonModule, MatGridListModule, MatInputModule, MatFormFieldModule,  FormsModule, ReactiveFormsModule, MatButton ],
   templateUrl: './panel-administrador.component.html',
   styleUrl: './panel-administrador.component.css'
 })
 export class PanelAdministradorComponent {
+  administradoresDisplayedColumns: string[] = ['nombre', 'apellido', 'dni', 'edad', 'email', 'fecha_registro', 'password', 'rol', 'rutaArchivoUno'];
+  especialistasDisplayedColumns: string[] = ['nombre', 'apellido', 'dni', 'edad', 'email', 'especialidad', 'fecha_registro', 'password', 'rol', 'rutaArchivoUno', 'validarEstado'];
+  pacientesDisplayedColumns: string[] = ['nombre', 'apellido', 'dni', 'edad', 'email', 'fecha_registro', 'password', 'rol', 'rutaArchivoUno', 'rutaArchivoDos', 'obraSocial'];
   displayedColumns: string[] = ['nombre', 'apellido', 'dni', 'edad', 'email', 'especialidad', 'fecha_registro', 'password', 'rol', 'rutaArchivoUno', 'rutaArchivoDos', 'obraSocial', 'validarEstado'];
+
   dataSource: any[] = [];
   selectedUser: any;
   esEspecialista: boolean = false;
   especialistaSeleccionado: any;
   esAdministrador: boolean = false;
+  administradores: any[] =[];
+  especialistas: any[]=[];
+  pacientes: any[]=[];
 
-
-  displayedColumnsEspecialista: string[] = ['nombre', 'apellido', 'dni', 'email', 'especialidad', 'validarEstado'];
   dataSourceValidar: any[] = [];
   selection = new SelectionModel<any>(true, []);
-  formEdit!: FormGroup;
 
-    // Crear la tabla de especialidad en la bd.
-    especialidades = [
-      {value: 'A', viewValue: 'A'},
-      {value: 'B', viewValue: 'B'},
-      {value: 'C', viewValue: 'C'},
-      {value: 'otra', viewValue: 'Otra Especialidad'}
-    ];
+  constructor(private datosUsuario: UsuarioService){
 
-  constructor(private datosUsuario: UsuarioService, private fb: FormBuilder){
-    this.formEdit = this.fb.group({
-      nombre: new FormControl("", [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z ]+$')]),
-      email: new FormControl("", [Validators.required, Validators.email]),
-      password: new FormControl("", [Validators.required, Validators.minLength(5)]),
-      edad: new FormControl("", [Validators.required, Validators.min(1)]),
-      apellido: new FormControl("", [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z ]+$')]),
-      dni: new FormControl("", [Validators.required, Validators.minLength(8), Validators.pattern('^[0-9]+$')]),
-      especialidad: new FormControl("", [Validators.required]),
-      otraEspecialidad: new FormControl("", [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z]+$')]),
-      obraSocial: new FormControl("", [Validators.required, Validators.maxLength(25), Validators.pattern('^[a-zA-Z ]+$')]),
-      rol: new FormControl("", [Validators.required, Validators.min(1), Validators.max(1)]),
-    });
   }
 
   async ngOnInit(){
     this.datosUsuario.obtenerCollection('usuarios').subscribe({
       next: (data: any[]) => {   
+        const filterAdministrador = data.filter(element => element.rol === 1);
+        const filterEspecialista = data.filter(element => element.rol === 2);
+        const filterPaciente = data.filter(element => element.rol === 3);
         this.dataSource = data.map((element) => ({
+          ...element,
+          fecha_registro: (element.fecha_registro as Timestamp).toDate()
+        }));
+        this.administradores = filterAdministrador.map((element) => ({
+          ...element,
+          fecha_registro: (element.fecha_registro as Timestamp).toDate()
+        }));
+        this.especialistas = filterEspecialista.map((element) => ({
+          ...element,
+          fecha_registro: (element.fecha_registro as Timestamp).toDate()
+        }));
+        this.pacientes = filterPaciente.map((element) => ({
           ...element,
           fecha_registro: (element.fecha_registro as Timestamp).toDate()
         }));
@@ -82,9 +85,7 @@ export class PanelAdministradorComponent {
         console.error('Error al obtener usuarios:', error);
       }
     });
-
     this.actualizarTablaEspecialista();
-
   }
 
   handleClick(clickedRow: any) {
@@ -107,34 +108,6 @@ export class PanelAdministradorComponent {
     this.selectedUser = clickedRow;
   }
 
-  async habilitarEspecialista(){
-
-    this.especialistaSeleccionado.validarEstado = true;
-    await this.datosUsuario.actualizarColeccion('usuarios', 'email', this.especialistaSeleccionado.email, this.especialistaSeleccionado);
-    this.actualizarTablaEspecialista();
-    this.especialistaSeleccionado = null;
-
-  }
-
-  seleccionarEspecialista(clickedRow: any){
-    this.especialistaSeleccionado = clickedRow;
-  }
-
-  async actualizarDatos() {
-
-  if (this.formEdit.valid) 
-  {             
-    await this.datosUsuario.actualizarColeccion('usuarios', 'email', this.selectedUser.email,this.selectedUser);
-    this.selectedUser = null; 
-
-  }else{
-    Object.values(this.formEdit.controls).forEach(control => {
-      control.markAsTouched();
-    });
-  }
-
-  }
-
   actualizarTablaEspecialista(){
 
     this.datosUsuario.buscarVariosDatosPorCampo('usuarios', 'validarEstado', false)
@@ -149,11 +122,12 @@ export class PanelAdministradorComponent {
     });
   }
 
-  volverASeleccion() {
-    this.formEdit.get('especialidad')?.setValue('');
-  } 
-
-  
+  async habilitarEstado(element: any) {
+    element.validarEstado = true;
+    await this.datosUsuario.actualizarColeccion('usuarios', 'email', element.email, element);
+    this.actualizarTablaEspecialista();
+    element = null;
+  }  
 }
 
 
