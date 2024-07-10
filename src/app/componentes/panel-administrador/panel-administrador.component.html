@@ -1,4 +1,4 @@
-  <div class="mat-elevation-z8">
+  <div class="mat-elevation-z8" #content>
     <mat-tab-group [backgroundColor]="'primary'">
 
       <mat-tab label="Especialistas">
@@ -201,8 +201,15 @@
 
     </mat-tab-group>
   </div>
-<br>
 
+  <button class="btn btn-success d-flex align-items-center" style="margin-top: 5px;" (click)="generarExcel()">
+    <mat-icon style="margin-bottom: -3px;">cloud_download</mat-icon>
+    <span style="margin-bottom: -3px;padding-left: 5px;"> Exportar a Excel</span>
+  </button>
+
+<br>
+<br>
+<br>
 <mat-divider></mat-divider>
 <br>
 <h4 style="text-align: start;">REGISTRAR NUEVO USUARIO</h4>
