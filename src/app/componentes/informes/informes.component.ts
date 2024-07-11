@@ -16,13 +16,15 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { AgruparPorPipe } from '../../pipes/agrupar-por.pipe'; 
 
 @Component({
   selector: 'app-informes',
   standalone: true,
-  imports: [MatButtonModule, MatSelectModule, MatNativeDateModule, MatDatepickerModule, MatInputModule, MatFormFieldModule, FormsModule, CommonModule, MatCardModule, MatIcon],
+  imports: [MatButtonModule, MatSelectModule, MatNativeDateModule, MatDatepickerModule, MatInputModule, MatFormFieldModule, FormsModule, CommonModule, MatCardModule, MatIcon, AgruparPorPipe],
   templateUrl: './informes.component.html',
-  styleUrl: './informes.component.css'
+  styleUrl: './informes.component.css',
+  providers: [AgruparPorPipe]
 })
 export class InformesComponent {
   fechaInicio: Date | null = null;
@@ -42,13 +44,7 @@ export class InformesComponent {
   private miGraficoTurnosFinalizados: Chart | undefined;
   private miGraficoTurnosPorEspecialista: Chart | undefined;
 
-  data = [
-    { key: 'Data1', value: 'Value1' },
-    { key: 'Data2', value: 'Value2' },
-    { key: 'Data3', value: 'Value3' }
-  ];
-
-  constructor(private informeServices:InformesService, private usuarioService:UsuarioService){}
+  constructor(private informeServices:InformesService, private usuarioService:UsuarioService, private agruparPor: AgruparPorPipe){}
 
   async ngOnInit() {
 
@@ -56,7 +52,7 @@ export class InformesComponent {
       next: (logs: any[]) => {
 
         this.logsDelSistema = logs;
-        const data = this.cantidadLogsPorDiasGrafico(this.logsDelSistema);
+        const data = this.agruparPor.transform(this.logsDelSistema, 'dia');
         Chart.register(...registerables);
         const ctx = document.getElementById('logsDiarios') as HTMLCanvasElement;
         const myChart = new Chart(ctx, {

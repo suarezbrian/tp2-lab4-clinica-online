@@ -12,13 +12,14 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton } from '@angular/material/button';
 import { EstadoTurno } from "../../../interfaces/estado-turno";
 import { Router } from '@angular/router';
+import { ConvertirFechaDiaMesPipe } from '../../../pipes/convertir-fecha-dia-mes.pipe';
 
 @Component({
   selector: 'app-solicitar-turno',
   standalone: true,
-  imports: [CommonModule,FormsModule, ReactiveFormsModule,MatStepperModule, SpinnerComponent, MatIcon, MatTooltip, MatButton],
+  imports: [CommonModule,FormsModule, ReactiveFormsModule,MatStepperModule, SpinnerComponent, MatIcon, MatTooltip, MatButton, ConvertirFechaDiaMesPipe],
   templateUrl: './solicitar-turno.component.html',
-  styleUrl: './solicitar-turno.component.css'
+  styleUrl: './solicitar-turno.component.css',
 })
 export class SolicitarTurnoComponent {
   @ViewChild('stepper') private stepper!: MatStepper;

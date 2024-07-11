@@ -22,7 +22,7 @@ import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
   standalone: true,
   imports: [RecaptchaFormsModule ,RecaptchaModule ,MatSelectModule, MatTabsModule, MatCheckboxModule, MatDividerModule, MatTableModule, MatButtonModule, MatIconModule, CommonModule, MatGridListModule, MatInputModule, MatFormFieldModule,  FormsModule, ReactiveFormsModule],
   templateUrl: './registro-especialista.component.html',
-  styleUrl: './registro-especialista.component.css'
+  styleUrl: './registro-especialista.component.css',
 })
 export class RegistroEspecialistaComponent {
 
@@ -43,7 +43,7 @@ export class RegistroEspecialistaComponent {
       especialidades: new FormControl([], Validators.required),
       otraEspecialidad: new FormControl("", [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]),
       imagenUno: new FormControl("", [Validators.required]),
-      //recaptchaReactive: new FormControl(null, Validators.required)
+      recaptchaReactive: new FormControl(null, Validators.required)
     });
   }
 

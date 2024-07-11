@@ -54,7 +54,7 @@
                         mat-raised-button 
                         [class.selected]="diaSeleccionado === dia" 
                         (click)="selectDia(dia)">
-                  {{ formatDateToDayMonth(dia) }}
+                        {{ dia | convertirFechaDiaMes }}
                 </button>
               </ng-container>
               <ng-container *ngIf="diasDisponibles.length === 0">

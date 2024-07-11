@@ -10,11 +10,12 @@ import { MatIcon } from '@angular/material/icon';
 import jsPDF from 'jspdf';
 import { UsuarioService } from '../../../services/usuario.service';
 import { fadeAnimation, salidaAnimation } from '../../../animations.component';
+import { FiltrosMisTurnosPipe } from '../../../pipes/filtros-mis-turnos.pipe';
 
 @Component({
   selector: 'app-mis-turnos',
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule, MatIcon, ReactiveFormsModule],
+  imports: [RouterLink, CommonModule, FormsModule, MatIcon, ReactiveFormsModule, FiltrosMisTurnosPipe],
   templateUrl: './mis-turnos.component.html',
   styleUrl: './mis-turnos.component.css', 
   animations: [fadeAnimation, salidaAnimation]
@@ -60,41 +61,23 @@ export class MisTurnosComponent {
     this.turnosFiltrados = this.turnos;
   }
 
-  filtrarTurnosEspecialidad() {
-    if (this.filtroEspecialidad.trim() === '') {
-      this.turnosFiltrados = this.turnos;
-    } else {
-      this.turnosFiltrados = this.turnos.filter(turno =>
-        turno.especialidad.toLowerCase().startsWith(this.filtroEspecialidad.toLowerCase())
-      );
-    }
-  }  
-    
-  filtrarTurnosEspecialista() {
-    if (this.filtroEspecialista.trim() === '') {
-      this.turnosFiltrados = this.turnos;
-    } else {
-      this.turnosFiltrados = this.turnos.filter(turno =>
-        turno.especialista.nombre.toLowerCase().startsWith(this.filtroEspecialista.toLowerCase())
-      );
-    }
-  }
-
   filtrarPorCamposHistoriaClinica() {
     if (this.filtroDatos.trim() === '') {
       this.turnosFiltrados = this.turnos; 
     } else {
       this.turnosFiltrados = this.turnos.filter(turno => {
+        
         if (turno.historiaClinica) {
           let keys = Object.keys(turno.historiaClinica);
-  
+        
           for (let key of keys) {
             if (key !== 'Especialista' && key !== 'fecha') {
               let valor = turno.historiaClinica[key];
-  
+             
               if (typeof valor === 'string' || typeof valor === 'number') {
 
                 if (typeof valor === 'string' && valor.toLowerCase().includes(this.filtroDatos.toLowerCase())) {
+                  
                 }
                 if (typeof valor === 'number' && valor.toString().includes(this.filtroDatos)) {
                   return true; 
