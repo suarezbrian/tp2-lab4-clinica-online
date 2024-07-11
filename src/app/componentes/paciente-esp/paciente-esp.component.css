@@ -92,3 +92,7 @@
     z-index: 1050;
     background-color: rgba(0, 0, 0, 0.5); 
   }
+
+  .card-body.selected img {
+    border: 3px solid #007bff; /* Color azul para indicar selección */
+  }

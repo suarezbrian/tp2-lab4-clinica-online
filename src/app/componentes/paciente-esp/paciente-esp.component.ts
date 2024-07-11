@@ -7,13 +7,15 @@ import { SharedServiceService } from '../../services/shared-service.service';
 import { EstadoTurno } from '../../interfaces/estado-turno';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import jsPDF from 'jspdf';
+import { SelectPacienteDirective } from '../../directives/select-paciente.directive';
 
 @Component({
   selector: 'app-paciente-esp',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIcon, SpinnerComponent, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, MatIcon, SpinnerComponent, ReactiveFormsModule, SelectPacienteDirective],
   templateUrl: './paciente-esp.component.html',
-  styleUrl: './paciente-esp.component.css'
+  styleUrl: './paciente-esp.component.css',
+  providers:[SelectPacienteDirective]
 })
 export class PacienteEspComponent {
   pacienteSeleccionado: any | null = null;

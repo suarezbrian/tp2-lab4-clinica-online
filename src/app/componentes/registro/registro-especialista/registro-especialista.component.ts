@@ -29,6 +29,7 @@ export class RegistroEspecialistaComponent {
   formEspecialista!: FormGroup;
   imagenUno: FormControl = new FormControl('', Validators.required);
   checked: boolean = false;
+  isOtraEspecialidad = false;
 
   especialidades: any;
 
@@ -58,12 +59,27 @@ export class RegistroEspecialistaComponent {
     });
   }
 
-  registrarEspecialista() {
-    if (this.formEspecialista.get('otraEspecialidad')?.value !== "") {
-      // this.especialidad.guardarEspecialidad(this.formEspecialista.get('otraEspecialidad')?.value);
+  onEspecialidadChange(event: any): void {
+    this.isOtraEspecialidad = event.value.includes('otra');
+   
+    if (this.isOtraEspecialidad) {
+      this.formEspecialista.get('otraEspecialidad')?.setValidators([Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z ]*$')]);
     } else {
-      this.formEspecialista.patchValue({ otraEspecialidad: 'No seleccionado' });
+      this.formEspecialista.get('otraEspecialidad')?.clearValidators();
+      this.formEspecialista.get('otraEspecialidad')?.setValue('');
     }
+    this.formEspecialista.get('otraEspecialidad')?.updateValueAndValidity();
+  }
+
+  volverASeleccion(): void {
+    this.isOtraEspecialidad = false;
+    this.formEspecialista.get('especialidades')?.setValue([]);
+    this.formEspecialista.get('otraEspecialidad')?.clearValidators();
+    this.formEspecialista.get('otraEspecialidad')?.setValue('');
+    this.formEspecialista.get('otraEspecialidad')?.updateValueAndValidity();
+  }
+
+  registrarEspecialista() {
 
     if (this.formEspecialista.valid) {
       const especialista: Especialista = {
@@ -114,8 +130,30 @@ export class RegistroEspecialistaComponent {
     }
   }
 
-  volverASeleccion() {
-    this.formEspecialista.get('especialidades')?.setValue([]);
+  guardarOtraEspecialidad() {
+    if (this.formEspecialista.get('otraEspecialidad')?.value !== "") {
+      
+      const nuevaEspecialidad: any = {
+        nombre: this.formEspecialista.get('otraEspecialidad')?.value,
+        rutaIcono: 'iconos/especialidades/default.png'
+      };
+
+      this.especialidad.guardarEspecialidad(this.formEspecialista.get('otraEspecialidad')?.value);
+      this.updateEspecialidades(nuevaEspecialidad);
+      this.volverASeleccion();
+    } 
   }
+
+  updateEspecialidades(nuevaEspecialidad: string) {
+    if (nuevaEspecialidad) {
+      if (!this.especialidades.includes(nuevaEspecialidad)) {
+        this.especialidades.push(nuevaEspecialidad);
+      }
+    }
+  }  
+
+ /* volverASeleccion() {
+    this.formEspecialista.get('especialidades')?.setValue([]);
+  }*/
 
 }

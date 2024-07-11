@@ -10,15 +10,25 @@
     background-color: #fff; 
 }
 
+  
+.full-width {
+    width: 100%;
+}
+
+.container {
+    width: 100%;
+}
+
 .form-field {
     margin-bottom: 20px;
     width: calc(50% - 10px); 
+    flex: 1;
+    margin: 8px;
 }
 
 .form-row {
     display: flex;
-    justify-content: space-between;
-    gap: 10px; 
+    flex-wrap: wrap;                                            
 }
 
 button[type="submit"] {
@@ -28,4 +38,7 @@ button[type="submit"] {
 .autoCompletar{
     background-color: rgb(145, 145, 145);
     width: 500px;
-  }
+}
+
+
+

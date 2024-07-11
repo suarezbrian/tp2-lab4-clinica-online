@@ -61,7 +61,8 @@ export class EspecialidadService {
     try {
 
       const especialidad: any = {
-        nombre: nombre
+        nombre: nombre,
+        rutaIcono: 'iconos/especialidades/default.png'
       };
 
       const especialistaCollection = collection(this.firestore, 'especialidad');

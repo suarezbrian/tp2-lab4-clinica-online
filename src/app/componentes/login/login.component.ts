@@ -11,13 +11,15 @@ import { UsuarioService } from '../../services/usuario.service';
 import { Timestamp } from '@angular/fire/firestore';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { MatIcon } from '@angular/material/icon';
+import { HoverDirective } from '../../directives/hover.directive';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [MatCheckboxModule, CommonModule, MatInputModule, MatButtonModule,MatCardModule, ReactiveFormsModule, SpinnerComponent, MatIcon],
+  imports: [MatCheckboxModule, CommonModule, MatInputModule, MatButtonModule,MatCardModule, ReactiveFormsModule, SpinnerComponent, MatIcon, HoverDirective],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
+  providers:[HoverDirective]
 })
 export class LoginComponent {
 

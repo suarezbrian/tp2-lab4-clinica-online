@@ -40,31 +40,32 @@
   <div class="quick-access-buttons">
     <ng-container *ngFor="let imagen of imagenesPaciente; let i = index">
       <div class="profile-container">
-        <button class="profile-button" (click)="autoComplete('pac', i)">
+        <button class="profile-button" (click)="autoComplete('pac', i)" appHover>
           <img [src]="imagen" [alt]="'Paciente ' + (i + 1)">
         </button>
         <div class="profile-name">{{ pacientes[i].nombre }}</div>
       </div>
     </ng-container>
-
+  
     <ng-container *ngFor="let imagen of imagenesEspecialista; let i = index">
       <div class="profile-container">
-        <button class="profile-button" (click)="autoComplete('espe', i)">
+        <button class="profile-button" (click)="autoComplete('espe', i)" appHover>
           <img [src]="imagen" [alt]="'Especialista ' + (i + 1)">
         </button>
         <div class="profile-name">{{ especialistas[i].nombre }}</div>
       </div>
     </ng-container>
-
+  
     <ng-container *ngFor="let imagen of imagenesAdministrador; let i = index">
       <div class="profile-container">
-        <button class="profile-button" (click)="autoComplete('adm', i)">
+        <button class="profile-button" (click)="autoComplete('adm', i)" appHover>
           <img [src]="imagen" alt="Administrador">
         </button>
         <div class="profile-name">{{ administrador[i].nombre }}</div>
       </div>
     </ng-container>
   </div>
+
 </div>
 
 </div>
