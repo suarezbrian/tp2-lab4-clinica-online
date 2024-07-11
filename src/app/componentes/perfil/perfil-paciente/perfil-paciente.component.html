@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" @slideInOutAnimation>
   <h5 class="card-title">Paciente</h5>
   <div class="row g-0">
     <div class="col-md-4">
@@ -35,7 +35,7 @@
   </div>    
 </div>
 
-<div *ngIf="mostrarHistoria" class="mt-4">
+<div *ngIf="mostrarHistoria" class="mt-4" @slideInOutAnimation @fadeAnimation>
   <div *ngFor="let turno of turnos" class="list-group-item turn-card">
     <div class="d-flex justify-content-between align-items-center">
       <div>
@@ -54,7 +54,10 @@
           </span>
         </p>
       </div>
-      <button class="btn btn-primary" (click)="verHistoriaClinica(turno)">Ver Historia Clínica</button>
+      <button class="btn btn-primary" *ngIf="turno.historiaClinicaCargada" (click)="verHistoriaClinica(turno)">Ver Historia Clínica</button>
+      <button *ngIf="turno.historiaClinicaCargada" class="btn btn-danger"  (click)="generarPDF(turno)">
+        <span>Exportar a PDF</span>
+      </button>
     </div>
   </div>
 </div>

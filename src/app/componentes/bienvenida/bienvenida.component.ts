@@ -5,13 +5,16 @@ import {MatDividerModule} from '@angular/material/divider';
 import { UsuarioService } from '../../services/usuario.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { CommonModule } from '@angular/common';
+import { fadeAnimation, salidaAnimation } from '../../animations.component';
 
 @Component({
   selector: 'app-bienvenida',
   standalone: true,
   imports: [RouterLink, MatIconModule, MatDividerModule, SpinnerComponent, CommonModule],
   templateUrl: './bienvenida.component.html',
-  styleUrl: './bienvenida.component.css'
+  styleUrl: './bienvenida.component.css',
+  animations: [fadeAnimation, salidaAnimation]
+
 })
 export class BienvenidaComponent {
 

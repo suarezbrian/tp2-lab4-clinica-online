@@ -33,6 +33,9 @@
           <button *ngIf="turno.estado === estadoTurno.Confirmado && !turno.historiaClinicaCargada" class="btn btn-primary" (click)="mostrarModalHistoriaClinica(turno)">Tomar turno</button>
           <button *ngIf="turno.calificacion.comentario" class="btn btn-info" (click)="verComentario(turno)">Ver Calificación</button>
           <button *ngIf="turno.historiaClinicaCargada" class="btn btn-warning" (click)="verHistoriaClinica(turno)">Ver Historia Clinica</button>
+          <button *ngIf="turno.historiaClinicaCargada" class="btn btn-danger"  (click)="generarPDF(turno)">
+            <span>Exportar a PDF</span>
+          </button>
         </div>
       </div>
 

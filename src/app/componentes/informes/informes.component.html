@@ -1,0 +1,134 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title style="color: white;">Logs Diarios</mat-card-title>
+                    <button style="color: white;" mat-icon-button (click)="exportToPDF('logsDiarios')">
+                        <mat-icon>picture_as_pdf</mat-icon>                        
+                    </button>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="chart-container">
+                        <canvas id="logsDiarios"></canvas>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="col-md-6 mb-4">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title style="color: white;">Turnos por Especialidad</mat-card-title>
+                    <button mat-icon-button (click)="exportToPDF('turnosPorEspecialidad')">
+                        <mat-icon style="color: white;">picture_as_pdf</mat-icon>
+                    </button>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="chart-container">
+                        <canvas id="turnosPorEspecialidad"></canvas>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title style="color: white;">Buscar Turnos Finalizados por Especialista</mat-card-title>
+                    <button *ngIf="botonTurnosPorEspecialistaFinalizados" mat-icon-button (click)="exportToPDF('turnosFinalizados')">
+                        <mat-icon style="color: white;">picture_as_pdf</mat-icon>
+                    </button>
+                </mat-card-header>
+                <mat-card-content style="margin-top: 20px;">
+                    <form (ngSubmit)="cargarTurnosFinalizadosPorEspecialista()">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <mat-form-field appearance="fill">
+                                    <mat-label style="color: white;">Fecha Inicio</mat-label>
+                                    <input matInput [matDatepicker]="pickerInicio" [(ngModel)]="fechaInicio" name="fechaInicio" required>
+                                    <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+                                    <mat-datepicker #pickerInicio></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field appearance="fill">
+                                    <mat-label style="color: white;">Fecha Fin</mat-label>
+                                    <input matInput [matDatepicker]="pickerFin" [(ngModel)]="fechaFin" name="fechaFin" required>
+                                    <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
+                                    <mat-datepicker #pickerFin></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <mat-form-field appearance="fill">
+                                    <mat-label style="color: white;">Especialista</mat-label>
+                                    <mat-select [(ngModel)]="especialista" name="especialista" required>
+                                        <mat-option *ngFor="let esp of especialistas" [value]="esp.email">
+                                            {{ esp.nombre + " " + esp.apellido }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Buscar Turnos</button>
+                    </form>
+                    <div class="chart-container mt-4">
+                        <canvas id="turnosFinalizados"></canvas>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title style="color: white;">Buscar Turnos por Especialista</mat-card-title>
+                    <button *ngIf="botonTurnosPorEspecialista"  mat-icon-button (click)="exportToPDF('turnosPorEspecialista')">
+                        <mat-icon style="color: white;">picture_as_pdf</mat-icon>
+                    </button>
+                </mat-card-header>
+                <mat-card-content style="margin-top: 20px;">
+                    <form (ngSubmit)="cargarTurnosPorEspecialista()">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <mat-form-field appearance="fill">
+                                    <mat-label style="color: white;">Fecha Inicio</mat-label>
+                                    <input matInput [matDatepicker]="pickerInicioEspecialista" [(ngModel)]="fechaInicioEspecialista" name="fechaInicio" required>
+                                    <mat-datepicker-toggle matSuffix [for]="pickerInicioEspecialista"></mat-datepicker-toggle>
+                                    <mat-datepicker #pickerInicioEspecialista></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field appearance="fill">
+                                    <mat-label style="color: white;">Fecha Fin</mat-label>
+                                    <input matInput [matDatepicker]="pickerFinEspecialista" [(ngModel)]="fechaFinEspecialista" name="fechaFin" required>
+                                    <mat-datepicker-toggle matSuffix [for]="pickerFinEspecialista"></mat-datepicker-toggle>
+                                    <mat-datepicker #pickerFinEspecialista></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <mat-form-field appearance="fill">
+                                    <mat-label style="color: white;">Especialista</mat-label>
+                                    <mat-select [(ngModel)]="turnoPorEspecialista" name="especialista" required>
+                                        <mat-option *ngFor="let esp of especialistas" [value]="esp.email">
+                                            {{ esp.nombre + " " + esp.apellido }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Buscar Turnos</button>
+                    </form>
+                    <div class="chart-container mt-4">
+                        <canvas id="turnosPorEspecialista"></canvas>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

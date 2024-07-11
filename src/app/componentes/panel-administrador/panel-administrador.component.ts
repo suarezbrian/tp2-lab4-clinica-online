@@ -20,6 +20,7 @@ import { RegistroEspecialistaComponent } from '../registro/registro-especialista
 import { RegistroAdministradorComponent } from '../registro-administrador/registro-administrador.component';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { InformesComponent } from '../informes/informes.component';
 
 
 @Component({
@@ -35,7 +36,7 @@ import { saveAs } from 'file-saver';
   imports: [RegistroAdministradorComponent,RegistroEspecialistaComponent,
     RegistroPacienteComponent, MatSelectModule, MatTabsModule, 
     MatCheckboxModule, MatDividerModule, MatTableModule, MatButtonModule, 
-    MatIconModule, CommonModule, MatGridListModule, MatInputModule, MatFormFieldModule,  FormsModule, ReactiveFormsModule, MatButton ],
+    MatIconModule, CommonModule, MatGridListModule, MatInputModule, MatFormFieldModule,  FormsModule, ReactiveFormsModule, MatButton, InformesComponent ],
   templateUrl: './panel-administrador.component.html',
   styleUrl: './panel-administrador.component.css'
 })

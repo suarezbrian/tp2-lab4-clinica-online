@@ -52,6 +52,9 @@
               </p>
             </div>
             <button class="btn btn-info" *ngIf="turno.historiaClinicaCargada" (click)="verHistoriaClinica(turno)">Ver Historial Clínico</button>
+            <button *ngIf="turno.historiaClinicaCargada" class="btn btn-danger"  (click)="generarPDF(turno)">
+              <span>Exportar a PDF</span>
+            </button>
           </div>
         </div>
       </div>

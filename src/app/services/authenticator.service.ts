@@ -8,6 +8,8 @@ import { PacienteService } from './paciente.service';
 import { SharedServiceService } from './shared-service.service';
 import { UsuarioService } from './usuario.service';
 import { AdministradorService } from './administrador.service';
+import { InformesService } from './informes.service';
+import { Logs } from '../interfaces/logs';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +30,8 @@ export class AuthenticatorService {
     private pacienteService: PacienteService,
     private sharedService: SharedServiceService,
     private usuarioService:UsuarioService,
-    private administradorService: AdministradorService
+    private administradorService: AdministradorService,
+    private informeService:InformesService
 
   ) { }
 
@@ -50,6 +53,7 @@ export class AuthenticatorService {
         this.sharedService.estaLogeado = true;
         this.sharedService.usuarioLogeado = this.datos;
         this.router.navigate(['/bienvenida']);
+        this.guardarLogs(this.datos);
       } else {
         await this.auth.signOut(); 
         this.alertService.mostrarAlerta(false, 'Correo no verificado. Por favor, verifica tu correo electrónico.', 2000);
@@ -67,6 +71,15 @@ export class AuthenticatorService {
     }
   }
 
+  guardarLogs(dato: any){
+    const now = new Date();
+    const dataLogs: Logs = {
+      usuario: dato.nombre + " " + dato.apellido,
+      dia: `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`,
+      horario: `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`,
+    };
+    this.informeService.guardarLogs(dataLogs);
+  }
 
 
 

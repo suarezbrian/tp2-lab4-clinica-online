@@ -112,7 +112,7 @@ export class TurnosService {
           where('paciente.email', '==', pacienteEmail) 
         )
       );
-
+      
       if (!querySnapshot.empty) {
         const turnos: Turno[] = [];
   
@@ -214,6 +214,7 @@ export class TurnosService {
             comentario: turno.comentario,
             calificacion: turno.calificacion,
             encuestaSatifaccion: turno.encuestaSatifaccion,
+            paciente: paciente
           });
         }
   

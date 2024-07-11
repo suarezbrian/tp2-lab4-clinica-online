@@ -1,9 +1,10 @@
-<div class="container mt-5">
+<div class="container mt-5" @slideInOutAnimation>
   <h2 class="mb-4">Mis Turnos - Paciente</h2>
 
   <div class="filters mb-4">
     <input type="text" class="form-control mb-2" placeholder="Filtrar por especialidad" [(ngModel)]="filtroEspecialidad" (ngModelChange)="filtrarTurnosEspecialidad()">
-    <input type="text" class="form-control" placeholder="Filtrar por especialista" [(ngModel)]="filtroEspecialista" (ngModelChange)="filtrarTurnosEspecialista()">
+    <input type="text" class="form-control mb-2" placeholder="Filtrar por especialista" [(ngModel)]="filtroEspecialista" (ngModelChange)="filtrarTurnosEspecialista()">
+    <input type="text" class="form-control" placeholder="Filtrar por historia clinica" [(ngModel)]="filtroDatos" (ngModelChange)="filtrarPorCamposHistoriaClinica()">
   </div>
 
   <div class="list-group">
@@ -30,6 +31,9 @@
           <button *ngIf="turno.estado === estadoTurno.Finalizado && !turno.encuestaSatifaccion.encuestaCompletada" class="btn btn-dark" (click)="abrirEncuesta(turno)">Completar encuesta</button>
           <button *ngIf="turno.estado === estadoTurno.Finalizado && !turno.calificacion.calificacionHecha" class="btn btn-primary" (click)="calificarAtencion(turno)">Calificar Atención</button>
           <button *ngIf="turno.historiaClinicaCargada" class="btn btn-warning" (click)="verHistoriaClinica(turno)">Ver Historia Clinica</button>
+          <button  *ngIf="turno.historiaClinicaCargada" class="btn btn-danger" (click)="generarPDF(turno)">
+            <span>Exportar a PDF</span>
+          </button>
         </div>
       </div>
       
@@ -58,7 +62,6 @@
   </div>
 </div>
 
-<!-- Modal para calificar atención -->
 <div class="modal" tabindex="-1" role="dialog" *ngIf="mostrarCalificacion">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -90,7 +93,6 @@
   </div>
 </div>
 
-<!-- Modal para encuesta de satisfacción -->
 <div class="modal" tabindex="-1" role="dialog" *ngIf="mostrarEncuesta">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
